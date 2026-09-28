@@ -209,9 +209,8 @@ class AeroTwinApp {
   }
 
   initWebSocket() {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.host;
-    const wsUrl = `${protocol}//${host}/ws/telemetry`;
+    const backend = window.AERO_BACKEND || `${window.location.protocol}//${window.location.host}`;
+    const wsUrl = backend.replace(/^http/, 'ws') + '/ws/telemetry';
 
     this.ws = new WebSocket(wsUrl);
 
@@ -253,7 +252,7 @@ class AeroTwinApp {
   async pollTelemetry() {
     if (this.connectionMode !== 'Live') return;
     try {
-      const res = await fetch('/api/telemetry/current');
+      const backend = window.AERO_BACKEND || ''; const res = await fetch(backend + '/api/telemetry/current');
       if (res.ok) {
         const packet = await res.json();
         this.dispatchPacket(packet);
@@ -294,7 +293,7 @@ class AeroTwinApp {
 
   async fetchFleet() {
     try {
-      const res = await fetch('/api/fleet');
+      const backend = window.AERO_BACKEND || ''; const res = await fetch(backend + '/api/fleet');
       const data = await res.json();
       this.fleet = data.fleet || [];
       if (data.active_uav_id) {
@@ -330,7 +329,7 @@ class AeroTwinApp {
   async selectUavOnBackend(uavId) {
     this.activeUav = uavId;
     try {
-      await fetch('/api/fleet/select', {
+      const backend = window.AERO_BACKEND || ''; await fetch(backend + '/api/fleet/select', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uav_id: uavId })
@@ -500,7 +499,7 @@ class AeroTwinApp {
     };
 
     try {
-      const res = await fetch('/api/fleet', {
+      const backend = window.AERO_BACKEND || ''; const res = await fetch(backend + '/api/fleet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
