@@ -1,0 +1,2434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroTwin // MALE UAV Engine Digital Twin Workstation</title>
+  <!-- Google Fonts: Inter and JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/ai_advisory.css?v=3">
+  <link rel="stylesheet" href="css/ai_advisory_page.css">
+  <link rel="stylesheet" href="css/assurance.css">
+</head>
+<body>
+
+  <!-- 1. STANAG 4586 Military Security Banner -->
+  <div class="security-banner">
+    UNCLASSIFIED // DEFENSE PROPULSION DIGITAL TWIN SYSTEM // STANAG 4586 COMPLIANT
+  </div>
+
+  <!-- Permanent Safety & Non-Operational Disclaimer Banner -->
+  <div class="permanent-disclaimer-banner" id="global-safety-disclaimer">
+    <span class="disclaimer-badge">DEMONSTRATOR MODE</span>
+    <span class="disclaimer-text">
+      SYNTHETIC DATA — READ-ONLY ADVISORY DIGITAL TWIN — NOT CONNECTED TO LIVE AIRCRAFT OR DEFENCE SYSTEMS.
+    </span>
+    <span class="disclaimer-mode-tag">UNCLASSIFIED / ADVISORY ONLY</span>
+  </div>
+
+  <!-- 2. Global Header (Top Bar) -->
+  <header class="global-header">
+    <div class="header-left">
+      <div class="brand-insignia">DT-AEROTWIN</div>
+      <div class="brand-titles">
+        <h1>MALE UAV ENGINE DIGITAL TWIN</h1>
+        <p>AI-ENABLED HEALTH MONITORING & MISSION RELIABILITY</p>
+      </div>
+    </div>
+
+    <!-- Center Connection & Mode Indicator -->
+    <div class="header-center">
+      <div class="mode-indicator-pill" id="global-mode-pill" title="Receiving real-time telemetry from UAV #03 (10 Hz)">
+        <span class="status-dot" id="global-mode-dot"></span>
+        <span id="global-mode-badge">LIVE SYNC</span>
+      </div>
+    </div>
+
+    <!-- Right Header Controls -->
+    <div class="header-right">
+      <div class="header-select-wrap">
+        <span>ROLE:</span>
+        <select class="mil-select" id="global-role-select">
+          <option value="Propulsion Engineer" selected>Propulsion Engineer</option>
+          <option value="Operator">Operator</option>
+          <option value="Maintenance Engineer">Maintenance Engineer</option>
+          <option value="System Administrator">System Administrator</option>
+          <option value="Observer / Demo User">Observer / Demo User</option>
+        </select>
+      </div>
+
+      <div class="header-fleet-controls">
+        <span>UAV:</span>
+        <select class="mil-select" id="global-fleet-select">
+          <option value="UAV-03" selected>UAV #03 [Active]</option>
+          <option value="UAV-01">UAV #01</option>
+          <option value="UAV-02">UAV #02</option>
+          <option value="UAV-04">UAV #04</option>
+        </select>
+      </div>
+      <button class="header-add-uav-btn" id="btn-header-add-uav" title="Commission new UAV into Digital Twin fleet" aria-label="Add UAV">
+        <span class="plus-icon">+</span> ADD UAV
+      </button>
+
+      <!-- Direct 3D Engine Simulation Shortcut in Header -->
+      <button class="header-3d-btn" id="btn-header-3d" onclick="window.app ? window.app.switchTab('engine3d') : null" title="Open 3D Engine Simulation">
+        🧊 3D ENGINE SIM
+      </button>
+
+      <!-- Fullscreen / Kiosk Mode Toggle Button -->
+      <button class="kiosk-btn" id="btn-kiosk-toggle" onclick="window.toggleFullscreen()" title="Toggle Fullscreen / Kiosk Mode (F11)">⛶ KIOSK MODE</button>
+
+      <button class="header-icon-btn" id="btn-header-settings" title="System Settings">⚙</button>
+    </div>
+  </header>
+
+  <!-- 3. Main Workspace Application Container -->
+  <div class="app-container">
+
+    <!-- Left Sidebar Primary Navigation -->
+    <nav class="sidebar-nav">
+      <button class="sidebar-nav-btn active" data-tab="live">
+        <span class="nav-icon">📡</span> <span>Live View</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="engine3d">
+        <span class="nav-icon">🧊</span> <span>3D Engine Simulation</span>
+        <span class="nav-new-pill">NEW</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="health">
+        <span class="nav-icon">❤️</span> <span>Health & RUL</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="alerts">
+        <span class="nav-icon">⚠️</span> <span>Alerts & FIM</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="advisory" id="nav-btn-advisory">
+        <span class="nav-icon">🛡️</span> <span>AI Advisory</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="replay">
+        <span class="nav-icon">🎬</span> <span>Replay</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="scenarios">
+        <span class="nav-icon">🧪</span> <span>Scenarios</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="missions">
+        <span class="nav-icon">📁</span> <span>Missions</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="assurance" id="nav-btn-assurance">
+        <span class="nav-icon">🛡️</span> <span>Integration & Assurance</span>
+        <span class="nav-new-pill" style="background:#7c3aed;">DEF-GRADE</span>
+      </button>
+      <button class="sidebar-nav-btn" data-tab="settings">
+        <span class="nav-icon">⚙️</span> <span>Settings</span>
+      </button>
+
+      <div class="sidebar-footer">
+        <div>SYS VER 2.4.0</div>
+        <div>STANAG 4586 GCS</div>
+      </div>
+    </nav>
+
+    <!-- Main Viewport Area -->
+    <main class="main-viewport">
+
+      <!-- ====================================================================
+           TAB 1: LIVE TAB - REAL-TIME ENGINE VIEW
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-live" style="display: block;">
+
+        <!-- Subtle Engine Cutaway Vector Watermark Background -->
+        <svg class="view-watermark-bg" viewBox="0 0 500 300" fill="none" stroke="#38bdf8" stroke-width="1.5">
+          <circle cx="250" cy="150" r="110" stroke-dasharray="6,4"/>
+          <rect x="180" y="80" width="140" height="140" rx="10"/>
+          <circle cx="250" cy="150" r="45"/>
+          <path d="M140 150 L360 150 M250 40 L250 260 M170 90 L330 210 M170 210 L330 90"/>
+          <rect x="80" y="125" width="60" height="50" rx="4"/>
+          <rect x="360" y="125" width="60" height="50" rx="4"/>
+          <path d="M110 90 L110 125 M390 90 L390 125"/>
+        </svg>
+
+        <!-- Top Row 8 Metric Cards -->
+        <div class="metrics-top-row">
+          <!-- 1. RPM -->
+          <div class="metric-card status-normal" id="card-rpm">
+            <div class="metric-header">
+              <span>Engine Speed</span>
+              <span class="metric-trend" id="trend-rpm">→</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="metric-val">5000</span>
+              <span class="metric-unit">RPM</span>
+            </div>
+          </div>
+
+          <!-- 2. CHT -->
+          <div class="metric-card status-normal" id="card-cht">
+            <div class="metric-header">
+              <span>Max CHT</span>
+              <span class="metric-trend" id="trend-cht">→</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="metric-val">108.4</span>
+              <span class="metric-unit">°C</span>
+            </div>
+          </div>
+
+          <!-- 3. EGT -->
+          <div class="metric-card status-normal" id="card-egt">
+            <div class="metric-header">
+              <span>Max EGT</span>
+              <span class="metric-trend" id="trend-egt">→</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="metric-val">785</span>
+              <span class="metric-unit">°C</span>
+            </div>
+          </div>
+
+          <!-- 4. Oil Pressure -->
+          <div class="metric-card status-normal" id="card-oil-p">
+            <div class="metric-header">
+              <span>Oil Pressure</span>
+              <span class="metric-trend" id="trend-oil-p">→</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="metric-val">3.65</span>
+              <span class="metric-unit">bar</span>
+            </div>
+          </div>
+
+          <!-- 5. Oil Temperature -->
+          <div class="metric-card status-normal" id="card-oil-t">
+            <div class="metric-header">
+              <span>Oil Temp</span>
+              <span class="metric-trend" id="trend-oil-t">→</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="metric-val">88.2</span>
+              <span class="metric-unit">°C</span>
+            </div>
+          </div>
+
+          <!-- 6. Fuel Flow -->
+          <div class="metric-card status-normal" id="card-fuel-flow">
+            <div class="metric-header">
+              <span>Fuel Flow</span>
+              <span class="metric-trend" id="trend-fuel-flow">→</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="metric-val">18.4</span>
+              <span class="metric-unit">L/h</span>
+            </div>
+          </div>
+
+          <!-- 7. Vibration -->
+          <div class="metric-card status-normal" id="card-vibration">
+            <div class="metric-header">
+              <span>Vibration</span>
+              <span class="metric-trend" id="trend-vibration">→</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="metric-val">1.18</span>
+              <span class="metric-unit">g</span>
+            </div>
+          </div>
+
+          <!-- 8. Overall Health Score -->
+          <div class="metric-card status-normal" id="card-health-score">
+            <div class="metric-header">
+              <span>Health Score</span>
+              <canvas id="health-ring-mini" width="22" height="22"></canvas>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="metric-val" style="color: var(--color-nominal);">92</span>
+              <span class="metric-unit">/100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Row: Charts Column + Context Status Column -->
+        <div class="live-middle-row">
+          <div class="charts-column">
+            <!-- 1. Power & Thermal Chart -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div class="chart-card-title">
+                  <span>⚡</span> POWER & THERMAL DYNAMICS (RPM / CHT / EGT)
+                </div>
+                <div class="chart-card-actions">
+                  <button class="chart-action-btn" onclick="window.liveView.powerThermalChart.zoomIn()">+</button>
+                  <button class="chart-action-btn" onclick="window.liveView.powerThermalChart.zoomOut()">-</button>
+                  <button class="chart-action-btn" onclick="window.liveView.powerThermalChart.resetZoom()">Reset</button>
+                  <button class="chart-action-btn" onclick="window.liveView.powerThermalChart.exportPNG('Power_Thermal.png')">PNG</button>
+                  <button class="chart-action-btn" onclick="window.liveView.powerThermalChart.exportCSV('Power_Thermal.csv')">CSV</button>
+                </div>
+              </div>
+              <div class="chart-canvas-container">
+                <canvas id="live-chart-power-thermal"></canvas>
+              </div>
+            </div>
+
+            <!-- 2. Lubrication, Fuel & Boost Telemetry Cluster (Pure Numerical Instruments) -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div class="chart-card-title">
+                  <span>💧</span> HYDRAULICS, FUEL & MANIFOLD PRESSURE (DIGITAL TELEMETRY READOUTS)
+                </div>
+                <span class="mil-badge badge-normal" id="live-hydraulics-status">HYDRAULICS NOMINAL</span>
+              </div>
+              
+              <div class="telemetry-readout-grid">
+                <!-- Oil Pressure -->
+                <div class="readout-cell">
+                  <div class="readout-label">Oil Pressure</div>
+                  <div class="readout-value-row">
+                    <span class="readout-big-num font-mono" id="readout-oil-press">3.97</span>
+                    <span class="readout-unit">bar</span>
+                  </div>
+                  <div class="readout-range-bar">
+                    <div class="readout-range-fill" id="bar-oil-press" style="width: 72%; background: #059669;"></div>
+                  </div>
+                  <div class="readout-sub-meta">Nominal: 2.0 - 5.0 bar</div>
+                </div>
+
+                <!-- Oil Temperature -->
+                <div class="readout-cell">
+                  <div class="readout-label">Oil Temperature</div>
+                  <div class="readout-value-row">
+                    <span class="readout-big-num font-mono" id="readout-oil-temp">81.9</span>
+                    <span class="readout-unit">°C</span>
+                  </div>
+                  <div class="readout-range-bar">
+                    <div class="readout-range-fill" id="bar-oil-temp" style="width: 63%; background: #059669;"></div>
+                  </div>
+                  <div class="readout-sub-meta">Limit: 130°C max</div>
+                </div>
+
+                <!-- Fuel Flow -->
+                <div class="readout-cell">
+                  <div class="readout-label">Fuel Flow Rate</div>
+                  <div class="readout-value-row">
+                    <span class="readout-big-num font-mono" id="readout-fuel-flow">24.9</span>
+                    <span class="readout-unit">L/h</span>
+                  </div>
+                  <div class="readout-range-bar">
+                    <div class="readout-range-fill" id="bar-fuel-flow" style="width: 55%; background: #0284c7;"></div>
+                  </div>
+                  <div class="readout-sub-meta">Burn: 0.41 L/min</div>
+                </div>
+
+                <!-- Fuel Pressure -->
+                <div class="readout-cell">
+                  <div class="readout-label">Fuel Rail Pressure</div>
+                  <div class="readout-value-row">
+                    <span class="readout-big-num font-mono" id="readout-fuel-press">3.20</span>
+                    <span class="readout-unit">bar</span>
+                  </div>
+                  <div class="readout-range-bar">
+                    <div class="readout-range-fill" id="bar-fuel-press" style="width: 78%; background: #059669;"></div>
+                  </div>
+                  <div class="readout-sub-meta">Nominal: 3.0 - 3.4 bar</div>
+                </div>
+
+                <!-- MAP / Boost -->
+                <div class="readout-cell">
+                  <div class="readout-label">Manifold Air Press (MAP)</div>
+                  <div class="readout-value-row">
+                    <span class="readout-big-num font-mono" id="readout-map">855</span>
+                    <span class="readout-unit">hPa</span>
+                  </div>
+                  <div class="readout-range-bar">
+                    <div class="readout-range-fill" id="bar-map" style="width: 60%; background: #0284c7;"></div>
+                  </div>
+                  <div class="readout-sub-meta">Boost Ratio: 1.69</div>
+                </div>
+
+                <!-- Coolant Temp -->
+                <div class="readout-cell">
+                  <div class="readout-label">Cylinder Coolant Temp</div>
+                  <div class="readout-value-row">
+                    <span class="readout-big-num font-mono" id="readout-coolant">80.1</span>
+                    <span class="readout-unit">°C</span>
+                  </div>
+                  <div class="readout-range-bar">
+                    <div class="readout-range-fill" id="bar-coolant" style="width: 68%; background: #059669;"></div>
+                  </div>
+                  <div class="readout-sub-meta">Range: 60 - 95°C</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Vibration & FFT Spectral Harmonics Cluster (Numerical Orders + FFT Canvas) -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div class="chart-card-title">
+                  <span>📊</span> CRANKCASE MECHANICAL VIBRATION & HARMONIC ORDERS (RMS NUMERICAL SUMMARY)
+                </div>
+                <span class="mil-badge badge-normal" id="live-vib-status">VIBRATION NOMINAL</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 240px; gap: 12px; align-items: stretch;">
+                <!-- Vibration Number Cards -->
+                <div class="vib-orders-grid">
+                  <div class="vib-order-card">
+                    <div class="vib-order-label">Overall Crankcase RMS</div>
+                    <div class="vib-order-val-wrap">
+                      <span class="vib-order-val font-mono" id="readout-vib-overall">1.23</span>
+                      <span class="vib-order-unit">g</span>
+                    </div>
+                    <div class="vib-order-desc">Caution &gt; 2.0g | Alarm &gt; 2.8g</div>
+                  </div>
+                  <div class="vib-order-card">
+                    <div class="vib-order-label">1X Crank Unbalance</div>
+                    <div class="vib-order-val-wrap">
+                      <span class="vib-order-val font-mono" id="readout-vib-1x">0.76</span>
+                      <span class="vib-order-unit">g</span>
+                    </div>
+                    <div class="vib-order-desc">Rotational Shaft Symmetry</div>
+                  </div>
+                  <div class="vib-order-card">
+                    <div class="vib-order-label">2X Cylinder Firing / Inertia</div>
+                    <div class="vib-order-val-wrap">
+                      <span class="vib-order-val font-mono" id="readout-vib-2x">0.36</span>
+                      <span class="vib-order-unit">g</span>
+                    </div>
+                    <div class="vib-order-desc">4-Cylinder Reciprocating</div>
+                  </div>
+                  <div class="vib-order-card">
+                    <div class="vib-order-label">4X Valve Gear Harmonics</div>
+                    <div class="vib-order-val-wrap">
+                      <span class="vib-order-val font-mono" id="readout-vib-4x">0.13</span>
+                      <span class="vib-order-unit">g</span>
+                    </div>
+                    <div class="vib-order-desc">Valvetrain Kinematics</div>
+                  </div>
+                </div>
+
+                <!-- Compact FFT Order Spectrum Bar Visualizer -->
+                <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-main); border-radius: 3px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;">
+                    FFT ORDER SPECTRUM (1X / 2X / 4X)
+                  </div>
+                  <canvas id="live-fft-canvas" width="220" height="70" style="width: 100%; height: 70px;"></canvas>
+                  <div style="font-size: 8px; color: #64748b; font-family: var(--font-mono); line-height: 1.2; margin-top: 2px;">
+                    1X: Crank | 2X: Firing | 4X: Valves
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column Context & Status -->
+          <div class="context-column">
+            <!-- Real-Time Ingestion Determinism Badge Card -->
+            <div class="panel-card" style="padding: 10px 12px;">
+              <div class="panel-title" style="margin-bottom: 4px;"><span>⏱</span> REAL-TIME INGESTION DETERMINISM</div>
+              <div class="determinism-badge-row" style="margin-top: 4px; padding-top: 0; border-top: none;">
+                <div class="determinism-pill">
+                  <span class="det-label">Latency</span>
+                  <span class="det-val" id="live-det-latency">18 ms</span>
+                </div>
+                <div class="determinism-pill">
+                  <span class="det-label">Drop Rate</span>
+                  <span class="det-val" id="live-det-drop" style="color: var(--color-nominal);">0.00%</span>
+                </div>
+                <div class="determinism-pill">
+                  <span class="det-label">Jitter</span>
+                  <span class="det-val" id="live-det-jitter">&lt;1.1 ms</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mission Phase Card -->
+            <div class="panel-card">
+              <div class="panel-title"><span>✈</span> MISSION PHASE PROGRESS</div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="mil-badge badge-normal" id="live-phase-badge">CRUISE / LOITER</span>
+                <span class="font-mono text-muted" style="font-size: 11px;">FL180</span>
+              </div>
+              <div class="phase-bar-track">
+                <div class="phase-bar-fill" id="live-phase-bar"></div>
+              </div>
+            </div>
+
+            <!-- Ambient & Flight Conditions -->
+            <div class="panel-card">
+              <div class="panel-title"><span>🌐</span> FLIGHT ENVELOPE & AMBIENT</div>
+              <div class="env-grid">
+                <div class="env-row">
+                  <span class="label">ALTITUDE</span>
+                  <span class="val" id="live-env-alt">9,842 ft (3,000 m)</span>
+                </div>
+                <div class="env-row">
+                  <span class="label">AMBIENT TEMP (OAT)</span>
+                  <span class="val" id="live-env-oat">-4.5°C</span>
+                </div>
+                <div class="env-row">
+                  <span class="label">AIRSPEED (IAS)</span>
+                  <span class="val" id="live-env-ias">88 kts</span>
+                </div>
+                <div class="env-row">
+                  <span class="label">BAROMETRIC PRESSURE</span>
+                  <span class="val">701 hPa</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rolling System Log -->
+            <div class="panel-card" style="flex: 1;">
+              <div class="panel-title"><span>📋</span> REAL-TIME AVIONICS SYSTEM LOG</div>
+              <div class="log-feed" id="live-system-log-feed">
+                <!-- Injected dynamically by LiveView -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Strip AI Summary -->
+        <div class="ai-summary-strip">
+          <div class="ai-summary-item">
+            <span class="ai-summary-label">ANOMALY CONFIDENCE:</span>
+            <span class="ai-summary-val" id="ai-anomaly-val">12% (Low)</span>
+          </div>
+          <div class="ai-summary-item">
+            <span class="ai-summary-label">PREDICTED FAULT:</span>
+            <span class="ai-summary-val" id="ai-predicted-fault-val">None Detected</span>
+          </div>
+          <div class="ai-summary-item">
+            <span class="ai-summary-label">ESTIMATED RUL:</span>
+            <span class="ai-summary-val" id="ai-rul-val" style="color: #06b6d4;">124 h (±8 h)</span>
+          </div>
+          <div class="ai-summary-item">
+            <span class="ai-summary-label">TWIN RESIDUAL D_M:</span>
+            <span class="ai-summary-val font-mono" style="color: var(--color-nominal);">1.34σ</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 2: HEALTH TAB - ENGINE HEALTH, RUL & DEGRADATION
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-health" style="display: none;">
+        <!-- Top Section Overall Health Summary -->
+        <div class="health-top-summary-grid">
+          <div class="radial-gauge-box">
+            <canvas id="health-radial-gauge-canvas" width="240" height="190" style="width: 240px; height: 190px;"></canvas>
+            <div id="health-status-text" style="font-size: 11px; margin-top: 4px; font-weight: 700;">Status: Healthy</div>
+            <div id="health-last-updated" class="font-mono text-muted" style="font-size: 9.5px; margin-top: 2px;">Updated Live</div>
+          </div>
+
+          <!-- 6 Sub-System Health Cards -->
+          <div class="subsystems-grid">
+            <!-- Thermal -->
+            <div class="subsystem-card">
+              <div class="subsystem-header">
+                <span class="subsystem-title">Thermal Health</span>
+                <span class="subsystem-score" id="subsystem-score-thermal" style="color: var(--color-nominal);">92%</span>
+              </div>
+              <div class="subsystem-meta">CHT, EGT & Oil Temperatures</div>
+              <div class="subsystem-sparkline-box"><canvas id="sparkline-thermal" width="180" height="28"></canvas></div>
+            </div>
+
+            <!-- Mechanical -->
+            <div class="subsystem-card">
+              <div class="subsystem-header">
+                <span class="subsystem-title">Mechanical Health</span>
+                <span class="subsystem-score" id="subsystem-score-mechanical" style="color: var(--color-nominal);">89%</span>
+              </div>
+              <div class="subsystem-meta">RPM Stability & Mount Vibration</div>
+              <div class="subsystem-sparkline-box"><canvas id="sparkline-mechanical" width="180" height="28"></canvas></div>
+            </div>
+
+            <!-- Lubrication -->
+            <div class="subsystem-card">
+              <div class="subsystem-header">
+                <span class="subsystem-title">Lubrication Health</span>
+                <span class="subsystem-score" id="subsystem-score-lubrication" style="color: var(--color-nominal);">95%</span>
+              </div>
+              <div class="subsystem-meta">Dry Sump Pressure & Viscosity</div>
+              <div class="subsystem-sparkline-box"><canvas id="sparkline-lubrication" width="180" height="28"></canvas></div>
+            </div>
+
+            <!-- Combustion -->
+            <div class="subsystem-card">
+              <div class="subsystem-header">
+                <span class="subsystem-title">Combustion Health</span>
+                <span class="subsystem-score" id="subsystem-score-combustion" style="color: var(--color-nominal);">86%</span>
+              </div>
+              <div class="subsystem-meta">EGT Pattern Spread & Misfire</div>
+              <div class="subsystem-sparkline-box"><canvas id="sparkline-combustion" width="180" height="28"></canvas></div>
+            </div>
+
+            <!-- Sensor -->
+            <div class="subsystem-card">
+              <div class="subsystem-header">
+                <span class="subsystem-title">Sensor Health</span>
+                <span class="subsystem-score" id="subsystem-score-sensor" style="color: var(--color-nominal);">98%</span>
+              </div>
+              <div class="subsystem-meta">CAN Consistency & Drift Tolerance</div>
+              <div class="subsystem-sparkline-box"><canvas id="sparkline-sensor" width="180" height="28"></canvas></div>
+            </div>
+
+            <!-- Electrical -->
+            <div class="subsystem-card">
+              <div class="subsystem-header">
+                <span class="subsystem-title">Electrical / Alternator</span>
+                <span class="subsystem-score" id="subsystem-score-electrical" style="color: var(--color-nominal);">96%</span>
+              </div>
+              <div class="subsystem-meta">28V Dual Bus & Generator Load</div>
+              <div class="subsystem-sparkline-box"><canvas id="sparkline-electrical" width="180" height="28"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Section: RUL Confidence Chart & Degradation Box -->
+        <div class="health-bottom-row">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-card-title">
+                <span>⏳</span> REMAINING USEFUL LIFE (RUL) PROJECTION WITH 90% CONFIDENCE BAND
+              </div>
+              <div class="chart-card-actions">
+                <button class="chart-action-btn" onclick="window.healthView.rulChart.exportPNG('RUL_Projection.png')">PNG</button>
+                <button class="chart-action-btn" onclick="window.healthView.rulChart.exportCSV('RUL_Projection.csv')">CSV</button>
+              </div>
+            </div>
+            <div class="chart-canvas-container" style="height: 220px;">
+              <canvas id="health-rul-chart-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Degradation Summary Box -->
+          <div class="degradation-box">
+            <div class="panel-title"><span>📉</span> DEGRADATION SUMMARY</div>
+            <div>
+              <div class="degradation-big-stat" id="health-est-rul-display">124 hours (±8 h)</div>
+              <div class="font-mono text-muted" id="health-rul-bounds-display" style="font-size: 11px;">P10: 112h | P90: 138h</div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-secondary);">
+              Based on last 5 missions, thermodynamic circuits, and real-time vibration spectral analysis:
+            </div>
+            <ul class="stress-list">
+              <li>
+                <span>Thermal stress:</span>
+                <strong id="stress-thermal-val" style="color: var(--color-nominal);">Moderate</strong>
+              </li>
+              <li>
+                <span>Mechanical stress:</span>
+                <strong id="stress-mech-val" style="color: var(--color-nominal);">Low</strong>
+              </li>
+              <li>
+                <span>Lubrication index:</span>
+                <strong id="stress-lub-val" style="color: var(--color-nominal);">Nominal</strong>
+              </li>
+            </ul>
+
+            <!-- Damage Accumulation Rate Formula Card -->
+            <div class="formula-callout-card">
+              <div class="formula-title">DAMAGE ACCUMULATION RATE MODEL:</div>
+              <div class="formula-math">Ḋ = α · exp(-E_a / (R · T_CHT)) + β · (Vibration_2x)²</div>
+              <div style="font-size: 9px; color: var(--text-muted); line-height: 1.2; margin-top: 2px;">
+                Coupled Arrhenius thermal degradation + 2× piston cyclic inertial stress.
+              </div>
+            </div>
+
+            <div style="font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); margin-top: auto;">
+              MODEL TYPE: Physics-Informed Neural Network + MVEM Filter
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 3: ALERTS TAB - FAULT DETECTION & EXPLAINABILITY
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-alerts" style="display: none;">
+        <!-- Top Bar Summary & Filter -->
+        <div class="alerts-top-bar">
+          <div id="alerts-summary-counts" style="font-size: 12px; font-family: var(--font-mono);">
+            Active Alerts: 3 (Critical: 1, Warning: 2, Info: 5)
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <select class="mil-select" onchange="window.alertsView.setFilterSeverity(this.value)">
+              <option value="ALL">All Severities</option>
+              <option value="CRITICAL">Critical Only</option>
+              <option value="WARNING">Warning Only</option>
+              <option value="INFO">Info Only</option>
+            </select>
+            <select class="mil-select" onchange="window.alertsView.setFilterType(this.value)">
+              <option value="ALL">All Categories</option>
+              <option value="Thermal">Thermal</option>
+              <option value="Fuel Injection">Fuel Injection</option>
+              <option value="Avionics">Avionics / Sensor</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Main Area: Alert Table + Explainability Side Panel -->
+        <div class="alerts-main-split">
+          <div class="alerts-table-wrap">
+            <table class="tactical-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Fault Type</th>
+                  <th>Severity</th>
+                  <th>Diagnostic Message</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="alerts-table-body">
+                <!-- Injected dynamically by AlertsView -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Explainability Side Panel -->
+          <div class="alert-side-panel">
+            <div>
+              <div style="font-size: 16px; font-weight: 800; color: var(--text-primary);" id="alert-detail-title">Overheating Trend</div>
+              <div id="alert-detail-meta" style="font-size: 11px; margin-top: 2px;"></div>
+              <div id="alert-assurance-strip" class="prediction-metadata-strip" style="margin-top: 6px;"></div>
+            </div>
+
+            <!-- Explainability: Why We Think This Is A Fault -->
+            <div>
+              <div class="explain-section-title">Why We Think This Is a Fault (Explainability)</div>
+              <ul class="explain-evidence-list" id="alert-explain-why-list"></ul>
+            </div>
+
+            <!-- SHAP Feature Contribution Bar Chart -->
+            <div>
+              <div class="explain-section-title">SHAP Feature Contribution (Anomaly Explainability)</div>
+              <div class="shap-container" id="alert-shap-container">
+                <!-- Dynamically rendered by AlertsView -->
+              </div>
+            </div>
+
+            <!-- Mini Anomaly Divergence Chart -->
+            <div>
+              <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase;">
+                Anomalous Pattern vs Normal Baseline:
+              </div>
+              <div class="chart-canvas-container" style="height: 105px;">
+                <canvas id="alert-explain-chart-canvas"></canvas>
+              </div>
+            </div>
+
+            <!-- Predicted Cause & Recommendations -->
+            <div>
+              <div class="explain-section-title">Primary Fault Hypothesis [Predicted]</div>
+              <div id="alert-predicted-cause-text" style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.4;"></div>
+            </div>
+
+            <div>
+              <div class="explain-section-title" style="color:#7c3aed;">Alternative Explanation (Sensor Drift / Data Quality)</div>
+              <div id="alert-alternative-explanation-text" style="font-size: 11.5px; color: #7c3aed; line-height: 1.4;"></div>
+            </div>
+
+            <div>
+              <div class="explain-section-title">Recommended Follow-Up Action</div>
+              <div id="alert-recommended-action-text" style="font-size: 11.5px; color: #f59e0b; font-weight: 600; line-height: 1.4;"></div>
+            </div>
+
+            <div>
+              <div class="explain-section-title">System Limitation Note</div>
+              <div id="alert-system-limit-text" style="font-size: 10.5px; color: var(--text-muted); font-style: italic; line-height: 1.3;"></div>
+            </div>
+
+            <div>
+              <div class="explain-section-title">Affected Metrics & Component</div>
+              <div id="alert-affected-metrics-tags"></div>
+            </div>
+
+            <!-- Closed-Loop Actionable Commands -->
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: auto; padding-top: 6px; border-top: 1px solid var(--border-muted);">
+              <div style="display: flex; gap: 6px;">
+                <button class="mil-btn btn-primary" style="flex: 1; font-size: 10.5px;" id="btn-export-pilot" onclick="window.alertsView.exportToPilot()">
+                  ✈ Export Action to GCS Pilot
+                </button>
+                <button class="mil-btn" style="flex: 1; font-size: 10.5px; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--color-critical); color: #fca5a5;" id="btn-fadec-failsafe" onclick="window.alertsView.executeFailsafe()">
+                  ⚡ FADEC Failsafe Cmd
+                </button>
+              </div>
+              <button class="mil-btn" style="width: 100%; font-size: 10px;" onclick="window.alertsView.exportReport()">
+                📄 Export Incident Report (STANAG 4586)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Alert Statistics -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div class="chart-card-title"><span>📈</span> ALERT FREQUENCY BY SUBSYSTEM (LAST 30 DAYS)</div>
+          </div>
+          <div style="height: 110px;">
+            <canvas id="alerts-stats-bar-canvas" width="800" height="110" style="width: 100%; height: 110px;"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB: AI ADVISORY — ENGINE HEALTH DECISION SUPPORT
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-advisory" style="display: none;">
+        <div class="adv-page-container">
+          <!-- 1. Header Ribbon -->
+          <div class="adv-page-header">
+            <div class="adv-page-header-left">
+              <div class="adv-header-insignia">DT-AI-ADVISORY</div>
+              <div>
+                <h1 class="adv-page-title">AI ADVISORY — ENGINE HEALTH DECISION SUPPORT</h1>
+                <p class="adv-page-subtitle">SITUATION-BASED FAULT PRIORITIZATION &amp; OPERATIONAL DECISION GUIDANCE // ROTAX 915/916 iS</p>
+              </div>
+            </div>
+            <div class="adv-page-header-right">
+              <div class="adv-live-telemetry-pill">
+                <span class="status-dot" style="background-color: #10b981;"></span>
+                <span class="font-mono text-xs font-bold">LIVE • DATA AGE: 0.1 s</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Main 3-Column Decision Support Workspace -->
+          <div class="adv-workspace-grid">
+            <!-- Column 1: Priority Queue -->
+            <div class="adv-grid-column">
+              <div class="adv-queue-container">
+                <div class="adv-column-header">
+                  <div class="adv-column-title">
+                    <span>📑</span> PRIORITY QUEUE
+                  </div>
+                  <span class="adv-count-badge font-mono" id="adv-queue-count">7 MONITORED</span>
+                </div>
+                <!-- Queue Search & Category Filter Toolbar -->
+                <div class="adv-queue-controls">
+                  <div class="adv-queue-search-wrap">
+                    <span class="adv-queue-search-icon">🔍</span>
+                    <input type="text" class="adv-queue-search-input" id="adv-queue-search" placeholder="Search subsystem or condition..." />
+                  </div>
+                  <div class="adv-queue-filter-pills" id="adv-queue-filter-pills">
+                    <button class="adv-q-filter-pill active" data-qfilter="ALL">ALL</button>
+                    <button class="adv-q-filter-pill" data-qfilter="CRITICAL">CRIT</button>
+                    <button class="adv-q-filter-pill" data-qfilter="WARNING">WARN</button>
+                    <button class="adv-q-filter-pill" data-qfilter="ADVISORY">ADV</button>
+                    <button class="adv-q-filter-pill" data-qfilter="NORMAL">NORM</button>
+                  </div>
+                </div>
+                <div class="adv-queue-list" id="adv-queue-list">
+                  <!-- Dynamically populated by AdvisoryView -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 2: Active Advisory & Recommendations -->
+            <div class="adv-grid-column adv-column-center">
+              <div class="adv-active-container">
+                <div class="adv-column-header">
+                  <div class="adv-column-title">
+                    <span>🎯</span> ACTIVE ADVISORY
+                  </div>
+                  <span class="adv-source-tag font-mono">Advisory source: Hybrid physics + AI model</span>
+                </div>
+                <div class="adv-active-scroll-body">
+                  <!-- A. Assessment Header Card -->
+                  <div class="ai-assessment-card">
+                    <div class="ai-meta-row">
+                      <span class="ai-meta-label">Assessment:</span>
+                      <span class="ai-badge badge-normal" id="adv-active-assessment">NORMAL</span>
+                    </div>
+                    <div class="ai-meta-row">
+                      <span class="ai-meta-label">Condition:</span>
+                      <span class="ai-meta-value font-bold" id="adv-active-condition">All Engine Subsystems Nominal</span>
+                    </div>
+                    <div class="ai-meta-row">
+                      <span class="ai-meta-label">Confidence:</span>
+                      <span class="ai-meta-value font-mono" id="adv-active-confidence">98%</span>
+                    </div>
+                    <div class="ai-meta-row">
+                      <span class="ai-meta-label">Priority:</span>
+                      <span class="ai-meta-value font-mono text-warning font-bold" id="adv-active-priority">P-12</span>
+                    </div>
+                    <div class="ai-meta-row">
+                      <span class="ai-meta-label">Mission Impact:</span>
+                      <span class="ai-meta-value" id="adv-active-impact">NOMINAL</span>
+                    </div>
+                    <div class="ai-meta-row">
+                      <span class="ai-meta-label">Status:</span>
+                      <span class="ai-meta-value font-mono text-muted" id="adv-active-status">Operational Baseline Confirmed</span>
+                    </div>
+                  </div>
+
+                  <!-- B. What Is Happening -->
+                  <div>
+                    <div class="ai-section-title">WHAT IS HAPPENING</div>
+                    <div class="ai-explanation-box" id="adv-active-explanation">
+                      All monitored combustion, thermal, hydraulic, and electrical metrics match calibrated physics-twin expectations. Cylinder head temperature variance across cylinders is under 2.5°C and lubrication film thickness remains optimal.
+                    </div>
+                  </div>
+
+                  <!-- C. Monitor Now -->
+                  <div>
+                    <div class="ai-section-title">MONITOR NOW</div>
+                    <div class="adv-monitor-list" id="adv-active-monitor-list">
+                      <!-- Populated dynamically -->
+                    </div>
+                  </div>
+
+                  <!-- D. Operator Decision Support -->
+                  <div>
+                    <div class="ai-section-title">OPERATOR DECISION SUPPORT</div>
+                    <div class="adv-decision-notice">
+                      Select an operational stance to record operator acknowledgement in mission audit records.
+                      <span class="text-muted block text-xs" style="margin-top: 2px;">Does not issue flight-control or autopilot commands.</span>
+                    </div>
+                    <div class="adv-decision-button-grid" id="adv-active-decision-buttons">
+                      <!-- Decision buttons -->
+                    </div>
+                  </div>
+
+                  <!-- E. Post-Flight Maintenance Recommendation -->
+                  <div>
+                    <div class="ai-section-title">POST-FLIGHT MAINTENANCE RECOMMENDATION</div>
+                    <div class="ai-maint-box">
+                      <div class="ai-priority-row">
+                        <span class="ai-meta-label">Inspection Priority:</span>
+                        <span class="ai-priority-val" id="adv-active-maint-priority">Monitor only</span>
+                      </div>
+                      <div class="ai-maint-list" id="adv-active-maint-list">
+                        <!-- Maintenance list -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- F. Why AI Believes This (Collapsible) -->
+                  <div>
+                    <button type="button" class="ai-collapsible-trigger" id="adv-why-toggle-btn" aria-expanded="false">
+                      <span>WHY AI THINKS THIS &amp; EVIDENCE</span>
+                      <span class="ai-collapsible-arrow" id="adv-why-arrow">▶</span>
+                    </button>
+                    <div class="ai-collapsible-content" id="adv-why-content" style="display: none;">
+                      <div class="adv-evidence-grid" id="adv-active-evidence-grid">
+                        <!-- Evidence cards -->
+                      </div>
+                      <div class="ai-bars-container">
+                        <div class="ai-bar-row">
+                          <div class="ai-bar-label-row">
+                            <span>Physics-based expectation</span>
+                            <span class="font-mono" id="adv-bar-physics-val">50%</span>
+                          </div>
+                          <div class="ai-bar-track">
+                            <div class="ai-bar-fill" id="adv-bar-physics-fill" style="width: 50%;"></div>
+                          </div>
+                        </div>
+                        <div class="ai-bar-row">
+                          <div class="ai-bar-label-row">
+                            <span>Anomaly model</span>
+                            <span class="font-mono" id="adv-bar-anomaly-val">30%</span>
+                          </div>
+                          <div class="ai-bar-track">
+                            <div class="ai-bar-fill" id="adv-bar-anomaly-fill" style="width: 30%;"></div>
+                          </div>
+                        </div>
+                        <div class="ai-bar-row">
+                          <div class="ai-bar-label-row">
+                            <span>Trend / degradation model</span>
+                            <span class="font-mono" id="adv-bar-trend-val">20%</span>
+                          </div>
+                          <div class="ai-bar-track">
+                            <div class="ai-bar-fill" id="adv-bar-trend-fill" style="width: 20%;"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- G. Engine Life and Mission Impact -->
+                  <div>
+                    <div class="ai-section-title">ENGINE LIFE AND MISSION IMPACT</div>
+                    <div class="ai-prognostics-card">
+                      <div class="ai-prog-row">
+                        <span class="ai-meta-label">Current Health Score:</span>
+                        <span class="ai-prog-val font-mono" id="adv-active-health-score">92 / 100</span>
+                      </div>
+                      <div class="ai-prog-row">
+                        <span class="ai-meta-label">Estimated RUL:</span>
+                        <span class="ai-prog-val font-mono" id="adv-active-rul-val">789 h ± 8 h</span>
+                      </div>
+                      <div class="ai-prog-row">
+                        <span class="ai-meta-label">Projected RUL If Persistent:</span>
+                        <span class="ai-prog-val font-mono text-warning" id="adv-active-projected-rul">789 h</span>
+                      </div>
+                      <div class="ai-prog-row">
+                        <span class="ai-meta-label">Estimated Current Mission Impact:</span>
+                        <span class="ai-meta-value font-bold" id="adv-active-mission-impact">NOMINAL</span>
+                      </div>
+                      <div class="ai-meta-label" style="margin-top: 4px;">Mission Recommendation:</div>
+                      <div class="ai-mission-recommendation-box rec-normal" id="adv-active-recommendation">
+                        Continue mission normally under approved standard flight profile.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 3: Engine & Mission Context -->
+            <div class="adv-grid-column">
+              <div class="adv-context-container">
+                <div class="adv-column-header">
+                  <div class="adv-column-title">
+                    <span>🌐</span> ENGINE &amp; MISSION CONTEXT
+                  </div>
+                  <span class="adv-sync-pill font-mono">10 Hz SYNC</span>
+                </div>
+                <div class="adv-context-scroll-body">
+                  <!-- Engine State -->
+                  <div class="adv-context-card">
+                    <div class="adv-card-category-header"><span>⚙️</span> ENGINE STATE</div>
+                    <div class="adv-context-grid">
+                      <div class="adv-context-metric"><span class="label">RPM</span><span class="val font-mono" id="adv-ctx-rpm">5000</span></div>
+                      <div class="adv-context-metric"><span class="label">MAX CHT</span><span class="val font-mono" id="adv-ctx-cht">108.4°C</span></div>
+                      <div class="adv-context-metric"><span class="label">MAX EGT</span><span class="val font-mono" id="adv-ctx-egt">785°C</span></div>
+                      <div class="adv-context-metric"><span class="label">OIL PRESS</span><span class="val font-mono" id="adv-ctx-oil-p">3.80 bar</span></div>
+                      <div class="adv-context-metric"><span class="label">OIL TEMP</span><span class="val font-mono" id="adv-ctx-oil-t">82.0°C</span></div>
+                      <div class="adv-context-metric"><span class="label">FUEL FLOW</span><span class="val font-mono" id="adv-ctx-fuel-flow">24.5 L/h</span></div>
+                      <div class="adv-context-metric" style="grid-column: span 2;"><span class="label">VIBRATION RMS</span><span class="val font-mono" id="adv-ctx-vib">1.18 g</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Health State -->
+                  <div class="adv-context-card">
+                    <div class="adv-card-category-header"><span>❤️</span> HEALTH STATE</div>
+                    <div class="adv-context-grid">
+                      <div class="adv-context-metric"><span class="label">HEALTH SCORE</span><span class="val font-mono text-nominal" id="adv-ctx-health-score">92 / 100</span></div>
+                      <div class="adv-context-metric"><span class="label">HEALTH TREND</span><span class="val font-mono" id="adv-ctx-health-trend">Stable</span></div>
+                      <div class="adv-context-metric"><span class="label">ANOMALY SCORE</span><span class="val font-mono" id="adv-ctx-anomaly-score">12%</span></div>
+                      <div class="adv-context-metric"><span class="label">SENSOR CONF</span><span class="val font-mono text-nominal">96%</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Mission State -->
+                  <div class="adv-context-card">
+                    <div class="adv-card-category-header"><span>✈️</span> MISSION STATE</div>
+                    <div class="adv-context-rows">
+                      <div class="adv-context-row"><span class="label">MISSION ID</span><span class="val font-mono">M-2025-07-14</span></div>
+                      <div class="adv-context-row"><span class="label">UAV CALLSIGN</span><span class="val font-mono font-bold">UAV-03</span></div>
+                      <div class="adv-context-row"><span class="label">PHASE</span><span class="val mil-badge badge-normal" id="adv-ctx-phase">CRUISE / LOITER</span></div>
+                      <div class="adv-context-row"><span class="label">ALTITUDE</span><span class="val font-mono" id="adv-ctx-alt">3,000 m (9,842 ft)</span></div>
+                      <div class="adv-context-row"><span class="label">OAT / AMBIENT</span><span class="val font-mono" id="adv-ctx-oat">-4.5°C</span></div>
+                      <div class="adv-context-row"><span class="label">THROTTLE LEVER</span><span class="val font-mono" id="adv-ctx-throttle">75%</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Data System State -->
+                  <div class="adv-context-card">
+                    <div class="adv-card-category-header"><span>📡</span> DATA SYSTEM STATE</div>
+                    <div class="adv-context-rows">
+                      <div class="adv-context-row"><span class="label">TELEMETRY LINK</span><span class="val text-nominal font-bold">ONLINE (10 Hz)</span></div>
+                      <div class="adv-context-row"><span class="label">DATA AGE</span><span class="val font-mono">0.1 s</span></div>
+                      <div class="adv-context-row"><span class="label">INFERENCE LATENCY</span><span class="val font-mono">18 ms</span></div>
+                      <div class="adv-context-row"><span class="label">TWIN SYNC STATE</span><span class="val font-mono text-nominal">EKF Converged</span></div>
+                      <div class="adv-context-row"><span class="label">MODEL VERSION</span><span class="val font-mono text-muted">v2.4.0-stanag</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Bottom Timeline & Decision Log -->
+          <div class="adv-bottom-timeline-row">
+            <div class="adv-timeline-container">
+              <div class="adv-timeline-header">
+                <div class="adv-timeline-title-wrap">
+                  <span class="adv-column-title"><span>📜</span> ADVISORY TIMELINE &amp; DECISION LOG</span>
+                  <span class="font-mono text-muted text-xs" id="adv-timeline-count">(3 / 3 EVENTS)</span>
+                </div>
+                <div class="adv-timeline-actions">
+                  <div class="adv-filter-pills">
+                    <button type="button" class="adv-filter-pill active">ALL</button>
+                    <button type="button" class="adv-filter-pill">AI</button>
+                    <button type="button" class="adv-filter-pill">TELEMETRY</button>
+                    <button type="button" class="adv-filter-pill">PHYSICS</button>
+                    <button type="button" class="adv-filter-pill">OPERATOR</button>
+                    <button type="button" class="adv-filter-pill">MAINTENANCE</button>
+                  </div>
+                  <button type="button" class="adv-export-btn" id="adv-export-log-btn" title="Download CSV audit log">
+                    <span>⬇️</span> Export Advisory Log
+                  </button>
+                </div>
+              </div>
+
+              <div class="adv-timeline-stream">
+                <table class="adv-timeline-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 85px;">TIME (UTC)</th>
+                      <th style="width: 95px;">CATEGORY</th>
+                      <th style="width: 85px;">SEVERITY</th>
+                      <th>EVENT / OBSERVATION / DECISION</th>
+                      <th style="width: 90px;">PRIORITY</th>
+                      <th style="width: 130px;">STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adv-timeline-body">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Operator Decision Confirmation Modal Dialog -->
+        <div class="adv-modal-backdrop" id="adv-decision-modal" style="display: none;" role="dialog" aria-modal="true">
+          <div class="adv-modal-card">
+            <div class="adv-modal-header">
+              <div class="adv-modal-title"><span>🛡️</span> RECORD OPERATOR DECISION SUPPORT</div>
+              <button type="button" class="adv-modal-close-btn" id="adv-modal-close-btn" title="Cancel (Esc)">×</button>
+            </div>
+            <div class="adv-modal-body">
+              <div class="adv-modal-field">
+                <label class="adv-field-label">TARGET CONDITION</label>
+                <div class="adv-condition-preview">
+                  <span class="ai-badge badge-warning" id="adv-modal-condition-sev">WARNING</span>
+                  <span class="font-bold text-primary" id="adv-modal-condition-title">Overheating Trend</span>
+                </div>
+              </div>
+              <div class="adv-modal-field">
+                <label class="adv-field-label">SELECTED OPERATIONAL DECISION</label>
+                <div class="adv-selected-decision-box" id="adv-modal-decision-text">Continue with enhanced monitoring</div>
+              </div>
+              <div class="adv-modal-warning-notice">
+                <div class="font-bold text-warning" style="margin-bottom: 4px;">⚠️ ADVISORY ACKNOWLEDGEMENT ONLY</div>
+                <div>This action records an operator acknowledgement and decision-support note into the digital twin mission logbook. It <strong>does not issue a flight-control, engine-control, throttle, autopilot, or mission route command</strong>.</div>
+                <div style="margin-top: 4px; font-style: italic; color: #64748b;">Final operational authority remains with the authorized UAV commander and approved flight manuals/SOP.</div>
+              </div>
+              <div class="adv-modal-field">
+                <label class="adv-field-label" for="adv-modal-note-input">OPERATOR LOG NOTES (OPTIONAL)</label>
+                <textarea id="adv-modal-note-input" class="adv-modal-textarea" placeholder="Enter context, ATC coordination notes, or flight deck rationale..." rows="3"></textarea>
+              </div>
+              <div class="adv-modal-footer">
+                <button type="button" class="adv-btn-secondary" id="adv-modal-cancel-btn">Cancel</button>
+                <button type="button" class="adv-btn-primary" id="adv-modal-confirm-btn">✓ Confirm and Log Decision</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 4: REPLAY TAB - MISSION REPLAY WITH TIMELINE
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-replay" style="display: none;">
+        <!-- Replay Top Bar Controls -->
+        <div class="replay-controls-bar">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="font-mono text-muted">MISSION:</span>
+            <select class="mil-select" id="replay-mission-select">
+              <option value="M-2025-07-14">M-2025-07-14 – ISR-North Patrol</option>
+              <option value="M-2025-08-02">M-2025-08-02 – High-Altitude Recon FL250</option>
+              <option value="M-2025-08-20">M-2025-08-20 – Hot-High Proving Challenge</option>
+            </select>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="mil-btn" id="replay-play-pause-btn">▶ PLAY</button>
+            <button class="mil-btn" id="replay-stop-btn">⏹ STOP</button>
+            <button class="mil-btn" id="replay-speed-btn">1.0x SPEED</button>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="mil-badge badge-warning">REPLAY MODE</span>
+            <span class="font-mono" id="replay-time-display" style="font-weight: 800; color: #06b6d4;">T+ 00:00:00 of 01:30:00</span>
+          </div>
+        </div>
+
+        <!-- Interactive Timeline Slider with Event Markers -->
+        <div class="timeline-scrubber-box">
+          <div class="timeline-markers-track" id="replay-markers-bar">
+            <!-- Injected by ReplayView -->
+          </div>
+          <input type="range" class="scrubber-slider" id="replay-timeline-slider" min="0" max="100" value="0" step="0.1">
+        </div>
+
+        <!-- Main Area: Replay Synchronized Metrics & Charts + Event Log -->
+        <div class="replay-main-grid">
+          <div class="charts-column">
+            <!-- Historical Metrics Cards Row -->
+            <div class="metrics-top-row" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="metric-card">
+                <div class="metric-header"><span>Engine RPM</span></div>
+                <div class="metric-val" id="replay-val-rpm">0</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header"><span>Max CHT</span></div>
+                <div class="metric-val" id="replay-val-cht">0°C</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header"><span>Max EGT</span></div>
+                <div class="metric-val" id="replay-val-egt">0°C</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header"><span>Oil Pressure</span></div>
+                <div class="metric-val" id="replay-val-oil-p">0.0 bar</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header"><span>Oil Temp</span></div>
+                <div class="metric-val" id="replay-val-oil-t">0°C</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header"><span>Fuel Flow</span></div>
+                <div class="metric-val" id="replay-val-fuel-flow">0 L/h</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header"><span>Vibration</span></div>
+                <div class="metric-val" id="replay-val-vib">0.0 g</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header"><span>Health Score</span></div>
+                <div class="metric-val" id="replay-val-health" style="color: var(--color-nominal);">--/100</div>
+              </div>
+            </div>
+
+            <!-- Time-Series Chart -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div class="chart-card-title"><span>📈</span> HISTORICAL SYNCHRONIZED REPLAY WINDOW</div>
+                <div class="chart-card-actions">
+                  <button class="chart-action-btn" onclick="window.replayView.replayChart.exportPNG('Replay.png')">PNG</button>
+                  <button class="chart-action-btn" onclick="window.replayView.replayChart.exportCSV('Replay.csv')">CSV</button>
+                </div>
+              </div>
+              <div class="chart-canvas-container" style="height: 190px;">
+                <canvas id="replay-chart-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Chronological Event Log -->
+          <div class="panel-card" style="display: flex; flex-direction: column;">
+            <div class="panel-title"><span>📑</span> MISSION EVENTS TIMELINE (CLICK TO JUMP)</div>
+            <div style="flex: 1; overflow-y: auto; max-height: 380px;" id="replay-event-log-container">
+              <!-- Injected by ReplayView -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Replay AI Summary Bottom Strip -->
+        <div class="ai-summary-strip">
+          <div class="ai-summary-item">
+            <span class="ai-summary-label">REPLAY ANOMALY SCORE:</span>
+            <span class="ai-summary-val" id="replay-ai-anomaly">0% (Nominal)</span>
+          </div>
+          <div class="ai-summary-item">
+            <span class="ai-summary-label">PREDICTED EVENT:</span>
+            <span class="ai-summary-val" id="replay-ai-fault">Nominal Envelope</span>
+          </div>
+          <div class="ai-summary-item">
+            <span class="ai-summary-label">RUL AT PLAYHEAD:</span>
+            <span class="ai-summary-val" id="replay-ai-rul" style="color: #06b6d4;">130 h</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 5: SCENARIOS TAB - WHAT-IF SIMULATION ENGINE
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-scenarios" style="display: none;">
+        <div class="scenarios-grid">
+          <!-- Left Panel: Scenario Controls -->
+          <div class="panel-card">
+            <div class="panel-title"><span>🎛</span> WHAT-IF SIMULATION PARAMETERS</div>
+
+            <!-- Altitude Delta Slider -->
+            <div class="scenario-control-group">
+              <div class="scenario-control-label">
+                <span>Altitude Delta</span>
+                <span class="font-mono" id="scen-readout-alt">+0 ft</span>
+              </div>
+              <input type="range" class="scenario-slider" id="scen-slider-alt" min="-5000" max="10000" value="0" step="500">
+            </div>
+
+            <!-- Ambient Temperature Delta Slider -->
+            <div class="scenario-control-group">
+              <div class="scenario-control-label">
+                <span>Ambient Temp (OAT) Delta</span>
+                <span class="font-mono" id="scen-readout-temp">+0.0°C</span>
+              </div>
+              <input type="range" class="scenario-slider" id="scen-slider-temp" min="-15" max="25" value="0" step="1">
+            </div>
+
+            <!-- Mission Profile Dropdown -->
+            <div class="scenario-control-group">
+              <div class="scenario-control-label"><span>Mission Scenario Profile</span></div>
+              <select class="mil-select" style="width: 100%;" id="scen-select-profile">
+                <option value="endurance" selected>Endurance (Long Loiter, Moderate Power)</option>
+                <option value="high_power">High-Power (Aggressive Climbs & Rapid Throttle)</option>
+                <option value="hot_high">Hot-Weather High-Altitude Operation</option>
+                <option value="rapid_throttle">Rapid Throttle Tactical Transitions</option>
+              </select>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-muted); margin: 12px 0 8px 0; padding-top: 6px; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+              Hardware Degradation & Fault Injection
+            </div>
+
+            <!-- Oil Pump Degradation -->
+            <div class="scenario-control-group">
+              <div class="scenario-control-label">
+                <span>Oil Pump Degradation</span>
+                <span class="font-mono" id="scen-readout-oil-pump">-0%</span>
+              </div>
+              <input type="range" class="scenario-slider" id="scen-slider-oil-pump" min="0" max="30" value="0" step="10">
+            </div>
+
+            <!-- Injector Clogging -->
+            <div class="scenario-control-group">
+              <div class="scenario-control-label"><span>Injector Clogging</span></div>
+              <select class="mil-select" style="width: 100%;" id="scen-select-inj-clog">
+                <option value="none" selected>None (Nominal Fuel Flow)</option>
+                <option value="mild">Mild Clogging (+35°C EGT)</option>
+                <option value="moderate">Moderate Clogging (+65°C EGT)</option>
+                <option value="severe">Severe Imbalance (+110°C EGT)</option>
+              </select>
+            </div>
+
+            <div style="display: flex; gap: 6px; margin-top: 14px;">
+              <button class="mil-btn btn-primary" style="flex: 1;" id="scen-btn-apply">Apply Scenario</button>
+              <button class="mil-btn" id="scen-btn-reset">Reset</button>
+              <button class="mil-btn" id="scen-btn-save">Save</button>
+            </div>
+          </div>
+
+          <!-- Center Panel: Synchronized Comparison View -->
+          <div class="chart-card" style="display: flex; flex-direction: column;">
+            <div class="chart-card-header">
+              <div class="chart-card-title">
+                <span>⚖</span> SYNCHRONIZED COMPARISON: BASELINE (BLUE) VS SCENARIO (ORANGE)
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                <span class="scen-callout-annot" id="scen-annot-cht">Peak CHT +14.2°C</span>
+                <span class="scen-callout-annot" id="scen-annot-surge" style="border-color: rgba(239, 68, 68, 0.6); color: #ef4444; background: rgba(239, 68, 68, 0.12);">Surge Margin 22% → 8%</span>
+                <span class="scen-callout-annot" id="scen-annot-rul">Δ RUL -26h (-21%)</span>
+              </div>
+            </div>
+            <div class="chart-canvas-container" style="flex: 1; height: 320px;">
+              <canvas id="scenario-comparison-chart-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Right Panel: Impact Summary -->
+          <div class="degradation-box">
+            <div class="panel-title"><span>📊</span> MISSION IMPACT SUMMARY</div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-muted); padding-bottom: 6px;">
+              <div>
+                <div class="font-mono text-muted" style="font-size: 10px;">BASELINE RUL</div>
+                <div class="font-mono" style="font-size: 16px; font-weight: 800; color: #06b6d4;" id="scen-sum-base-rul">124 h</div>
+              </div>
+              <div>
+                <div class="font-mono text-muted" style="font-size: 10px;">SCENARIO RUL</div>
+                <div class="font-mono" style="font-size: 16px; font-weight: 800; color: #f97316;" id="scen-sum-scen-rul">98 h</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="font-mono text-muted" style="font-size: 10px;">NET RUL DELTA</div>
+              <div class="font-mono" style="font-size: 18px; font-weight: 800;" id="scen-sum-delta-rul">-26 h (-21%)</div>
+            </div>
+
+            <ul class="stress-list">
+              <li><span>Thermal stress:</span> <strong id="scen-stress-thermal">+18%</strong></li>
+              <li><span>Mechanical stress:</span> <strong id="scen-stress-mechanical">+5%</strong></li>
+              <li><span>Lubrication stress:</span> <strong id="scen-stress-lubrication">+3%</strong></li>
+            </ul>
+
+            <div style="font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+              Operational Recommendations:
+            </div>
+            <ul class="stress-list" id="scen-recommendations-list" style="font-size: 11px; line-height: 1.3;">
+              <!-- Injected by ScenariosView -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom Strip Scenario Notes & Disclaimer -->
+        <div class="panel-card" style="margin-top: 10px;">
+          <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">
+            Scenario Assumptions & Propulsion Engineering Notes
+          </div>
+          <textarea style="width: 100%; height: 50px; background: var(--bg-surface-elevated); border: 1px solid var(--border-main); color: var(--text-primary); padding: 6px; font-family: var(--font-sans); font-size: 11.5px; border-radius: 3px; outline: none;">What-if study evaluates high-altitude loiter endurance under hot ambient conditions. Turbocharger compressor surge margin remained above 18%.</textarea>
+          <div style="font-size: 9.5px; color: var(--text-muted); margin-top: 4px; font-family: var(--font-mono);">
+            * DISCLAIMER: Results based on physics-informed AI calibrated with Rotax 915/916 iS bench test data. Actual flight conditions may introduce aerodynamic cooling variations.
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 6: MISSIONS TAB - HISTORICAL MISSIONS & REPORTS
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-missions" style="display: none;">
+        <!-- Top Bar Filters -->
+        <div class="alerts-top-bar">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-primary);">
+            MALE UAV HISTORICAL MISSIONS ARCHIVE
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <select class="mil-select">
+              <option>All UAV Airframes</option>
+              <option>UAV-03</option>
+              <option>UAV-02</option>
+            </select>
+            <select class="mil-select">
+              <option>All Mission Profiles</option>
+              <option>ISR Patrol</option>
+              <option>High-Altitude Recon</option>
+              <option>Maritime</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Main Missions Table -->
+        <div class="alerts-table-wrap">
+          <table class="tactical-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Mission ID & Name</th>
+                <th>Duration</th>
+                <th>Max Altitude</th>
+                <th>Avg RPM</th>
+                <th>Max CHT / EGT</th>
+                <th>Health Score</th>
+                <th>Faults</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="missions-table-body">
+              <!-- Injected by MissionsView -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mission Detail View -->
+        <div class="panel-card" style="margin-top: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div>
+              <div style="font-size: 14px; font-weight: 800;" id="mission-detail-title">Mission Detail</div>
+              <div style="font-size: 11px; color: var(--text-muted);" id="mission-detail-meta">Select a mission to inspect flight profile</div>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button class="mil-btn btn-primary" onclick="window.missionsView.downloadReport()">Download PDF Report</button>
+              <button class="mil-btn" onclick="window.missionsView.exportCSV()">Export CSV</button>
+            </div>
+          </div>
+
+          <!-- Summary Stats Grid -->
+          <div class="tactical-hud-ribbon" style="display: flex; background: var(--bg-surface-elevated); margin-bottom: 12px;" id="mission-detail-stats-grid">
+            <!-- Injected by MissionsView -->
+          </div>
+
+          <!-- Health & RUL Chart -->
+          <div class="chart-canvas-container" style="height: 180px;">
+            <canvas id="mission-detail-chart-canvas"></canvas>
+          </div>
+
+          <!-- Alerts recorded during mission -->
+          <div style="margin-top: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">
+              Mission Exceedance & Diagnostic Incident Records:
+            </div>
+            <div id="mission-detail-alerts-list">
+              <!-- Injected by MissionsView -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 7: SETTINGS TAB - CONFIGURATION & THRESHOLDS
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-settings" style="display: none;">
+
+        <!-- Fleet Management & Airframe Registry Panel -->
+        <div class="panel-card" style="margin-bottom: 14px;">
+          <div class="panel-title" style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>✈️</span> AIRFRAME FLEET REGISTRY & DIGITAL TWIN NODES
+            </div>
+            <button class="mil-btn btn-primary" id="settings-add-uav-btn" style="padding: 4px 10px; font-size: 11px;">
+              + COMMISSION NEW AIRFRAME
+            </button>
+          </div>
+
+          <div class="fleet-stats-strip" id="fleet-stats-strip">
+            <!-- Populated dynamically: Total, Active, Standby, Maintenance, Avg Health -->
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="tactical-table" id="settings-fleet-table">
+              <thead>
+                <tr>
+                  <th>Airframe ID / Callsign</th>
+                  <th>Model & Propulsion</th>
+                  <th>Tail Reg</th>
+                  <th>Flight Hours (TTAF)</th>
+                  <th>Twin Status</th>
+                  <th>Health</th>
+                  <th>Base / Station</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="settings-fleet-body">
+                <!-- Populated dynamically by SettingsView -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <!-- Left: Threshold Overrides Table -->
+          <div class="panel-card">
+            <div class="panel-title"><span>⚠️</span> OPERATIONAL LIMITS & THRESHOLD OVERRIDES</div>
+            
+            <!-- FADEC Calibration Mode Security Banner -->
+            <div class="fadec-lock-box" id="fadec-security-banner">
+              <div class="fadec-lock-status">
+                <span id="fadec-lock-icon">🔒</span>
+                <span id="fadec-lock-text">FADEC CALIBRATION: SUPERVISOR AUTH REQUIRED</span>
+              </div>
+              <button class="mil-btn" id="btn-fadec-auth-toggle" onclick="window.settingsView.toggleSupervisorAuth()">Unlock Calibration</button>
+            </div>
+
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+              Changing operational limits dynamically recalculates caution/alarm triggers, health indices, and RUL penalty curves.
+            </div>
+
+            <table class="tactical-table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Warning Threshold</th>
+                  <th>Critical Alarm</th>
+                  <th>Unit</th>
+                </tr>
+              </thead>
+              <tbody id="settings-thresholds-body">
+                <!-- Injected by SettingsView -->
+              </tbody>
+            </table>
+
+            <div style="margin-top: 12px; text-align: right;">
+              <button class="mil-btn btn-primary" id="settings-save-thresholds-btn">Save Threshold Overrides</button>
+            </div>
+          </div>
+
+          <!-- Right: Data Retention, Profile & Theme -->
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="panel-card">
+              <div class="panel-title"><span>💾</span> TELEMETRY DATA & RETENTION</div>
+              <div style="display: flex; flex-direction: column; gap: 8px; font-size: 11px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span>Buffer Retention Window:</span>
+                  <select class="mil-select">
+                    <option>30 Days (Flight Line Buffer)</option>
+                    <option selected>90 Days (Standard ISR Archive)</option>
+                    <option>180 Days (Full Airframe Lifetime)</option>
+                  </select>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span>STANAG 4586 Telemetry Export:</span>
+                  <button class="mil-btn" id="settings-export-telemetry-btn">Export Raw Buffer (CSV/JSON)</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-title"><span>👤</span> OPERATOR & STATION PROFILE</div>
+              <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11px;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Operator Handle:</span>
+                  <strong class="font-mono">ENG-PROP-07 (Capt. Reynolds)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Security Clearance:</span>
+                  <span class="mil-badge badge-normal">NATO SECRET // STANAG 4586</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">GCS Station Node:</span>
+                  <span class="font-mono">GCS-NORTH-TERMINAL-01</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-title"><span>ℹ️</span> SYSTEM INFO & THEME</div>
+              <div style="display: flex; flex-direction: column; gap: 8px; font-size: 11px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span>Interface Visual Theme:</span>
+                  <select class="mil-select" id="theme-toggle-select">
+                    <option value="dark" selected>Defense Dark Mode (Default)</option>
+                    <option value="light">Ops Daylight Mode</option>
+                  </select>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Digital Twin Physics Core:</span>
+                  <span class="font-mono">MVEM Thermodynamics v1.2</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Prognostics Engine:</span>
+                  <span class="font-mono">Physics-Informed Neural Network (PINN)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 8: 3D ENGINE SIMULATION - SYNTHETIC DIGITAL TWIN
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-engine3d" style="display: none;">
+
+        <!-- Top Synthetic Warning Label -->
+        <div class="sim-mode-banner">
+          DEMONSTRATOR VISUALIZATION // SYNTHETIC SIMULATION DATA // MULTI-ENGINE DIGITAL TWIN LABORATORY
+        </div>
+
+        <!-- 3D Header Bar & Quick Controls -->
+        <div class="engine3d-header-bar">
+          <div class="engine3d-header-left">
+            <div class="engine3d-title-group">
+              <h2>MULTI-ENGINE 3D DIGITAL TWIN LAB</h2>
+              <span class="engine3d-sub" id="sim-active-engine-sub">ROTAX 915/916 iS CLASS // HORIZONTALLY OPPOSED BOXER // SYNTHETIC PROGNOSTICS</span>
+            </div>
+            <div class="engine3d-badges">
+              <span class="mil-badge badge-info" id="sim-id-badge">SIM-LAB-001</span>
+              <span class="mil-badge badge-warning" id="sim-engine-model-badge">BOXER 4-CYL</span>
+              <span class="mil-badge badge-phase" id="sim-current-phase">LOITER</span>
+              <span class="mil-badge badge-clock font-mono" id="sim-current-time">00:00</span>
+              <span class="status-badge-sim" id="sim-status-badge">RUNNING</span>
+            </div>
+          </div>
+
+          <div class="engine3d-header-right">
+            <!-- Simulation Controls -->
+            <div class="btn-group-sim">
+              <button class="btn-sim-action" id="btn-sim-start" title="Resume Simulation">▶ START</button>
+              <button class="btn-sim-action" id="btn-sim-pause" title="Pause Simulation">⏸ PAUSE</button>
+              <button class="btn-sim-action" id="btn-sim-stop" title="Stop Simulation">⏹ STOP</button>
+              <button class="btn-sim-action" id="btn-sim-reset" title="Reset Engine State">↺ RESET</button>
+            </div>
+
+            <!-- Sim Speed Multipliers -->
+            <div class="btn-group-speed">
+              <button class="btn-sim-speed" data-speed="0.5">0.5x</button>
+              <button class="btn-sim-speed active" data-speed="1.0">1x</button>
+              <button class="btn-sim-speed" data-speed="2.0">2x</button>
+              <button class="btn-sim-speed" data-speed="5.0">5x</button>
+            </div>
+
+            <!-- 1-Click Demo Scenarios Menu & Mission Comparison -->
+            <div class="header-action-buttons">
+              <div class="demo-dropdown-container">
+                <button class="btn-demo-scenario" id="btn-demo-menu-trigger" title="Select and Run 1-Click Demo Scenarios">
+                  ⚡ DEMO SCENARIOS ▾
+                </button>
+                <div class="demo-dropdown-menu" id="demo-dropdown-menu" style="display: none;">
+                  <div class="demo-menu-item" data-scenario="heavy_fuel_endurance">
+                    <span class="demo-menu-icon">⛽</span>
+                    <div class="demo-menu-text">
+                      <span class="demo-item-title">1. Heavy-Fuel CI Endurance</span>
+                      <span class="demo-item-sub">Extended loiter • Injector clogging & rail pressure drop</span>
+                    </div>
+                  </div>
+                  <div class="demo-menu-item" data-scenario="boxer_imbalance">
+                    <span class="demo-menu-icon">↔️</span>
+                    <div class="demo-menu-text">
+                      <span class="demo-item-title">2. Boxer Cylinder Imbalance</span>
+                      <span class="demo-item-sub">Cruise phase • Cyl 3 overheating & 22°C bank split</span>
+                    </div>
+                  </div>
+                  <div class="demo-menu-item" data-scenario="wankel_seal_wear">
+                    <span class="demo-menu-icon">🔺</span>
+                    <div class="demo-menu-text">
+                      <span class="demo-item-title">3. Wankel Apex-Seal Wear</span>
+                      <span class="demo-item-sub">High-load loiter • Apex seal wear & housing thermal spike</span>
+                    </div>
+                  </div>
+                  <div class="demo-menu-item" data-scenario="turbo_altitude_climb">
+                    <span class="demo-menu-icon">🌀</span>
+                    <div class="demo-menu-text">
+                      <span class="demo-item-title">4. Turbocharged FL250 Climb</span>
+                      <span class="demo-item-sub">FL250 ceiling • Wastegate lag & turbo spool exceedance</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn-compare-engines" id="btn-compare-all-engines" title="Compare all 4 engine architectures under identical mission parameters">
+                📊 COMPARE ENGINES
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             ENGINE ARCHITECTURE SELECTOR (4 INTERACTIVE CARDS)
+             ==================================================================== -->
+        <div class="engine-architecture-selector-container">
+          <div class="selector-section-header">
+            <span class="selector-title">SELECT PROPULSION ARCHITECTURE</span>
+            <span class="selector-hint">Click an engine card to hot-swap the 3D digital twin demonstrator model and telemetry engine</span>
+          </div>
+
+          <div class="engine-cards-grid">
+            <!-- Card 1: Four-Stroke Heavy-Fuel Compression-Ignition Engine -->
+            <div class="engine-arch-card" id="card-arch-HEAVY_FUEL_CI" data-engine="HEAVY_FUEL_CI">
+              <div class="engine-arch-header">
+                <span class="engine-arch-icon">⛽</span>
+                <div class="engine-arch-badge">HEAVY FUEL // CI</div>
+              </div>
+              <h3 class="engine-arch-name">Four-Stroke Heavy-Fuel Compression-Ignition Engine</h3>
+              <p class="engine-arch-desc">Four-stroke compression-ignition engine designed to operate with heavy fuels such as diesel or aviation kerosene-class fuels in this synthetic demonstrator.</p>
+              <div class="engine-arch-specs">
+                <div class="spec-section">
+                  <div class="spec-title">KEY STRENGTHS:</div>
+                  <ul class="spec-list strengths">
+                    <li>Strong fuel efficiency for long endurance</li>
+                    <li>Simplified military fuel logistics concept</li>
+                    <li>Lower fuel volatility relative to gasoline</li>
+                  </ul>
+                </div>
+                <div class="spec-section">
+                  <div class="spec-title">KEY TRADE-OFFS:</div>
+                  <ul class="spec-list tradeoffs">
+                    <li>Higher engine mass</li>
+                    <li>Higher compression and structural load</li>
+                    <li>Thermal and vibration management remain critical</li>
+                  </ul>
+                </div>
+              </div>
+              <button class="btn-select-arch" data-engine="HEAVY_FUEL_CI">SELECT ENGINE</button>
+            </div>
+
+            <!-- Card 2: Horizontally Opposed / Boxer Reciprocating-Piston Engine -->
+            <div class="engine-arch-card active" id="card-arch-BOXER" data-engine="BOXER">
+              <div class="engine-arch-header">
+                <span class="engine-arch-icon">↔️</span>
+                <div class="engine-arch-badge">BOXER // OPPOSED</div>
+              </div>
+              <h3 class="engine-arch-name">Horizontally Opposed / Boxer Reciprocating-Piston Engine</h3>
+              <p class="engine-arch-desc">Reciprocating engine with cylinders arranged horizontally opposite each other around a central crankshaft.</p>
+              <div class="engine-arch-specs">
+                <div class="spec-section">
+                  <div class="spec-title">KEY STRENGTHS:</div>
+                  <ul class="spec-list strengths">
+                    <li>Low engine profile fits slender airframes</li>
+                    <li>Good primary balance (opposed pistons)</li>
+                    <li>Suitable geometry for streamlined installation</li>
+                  </ul>
+                </div>
+                <div class="spec-section">
+                  <div class="spec-title">KEY TRADE-OFFS:</div>
+                  <ul class="spec-list tradeoffs">
+                    <li>Wider engine package</li>
+                    <li>Cowl and cooling-path design are important</li>
+                    <li>Cylinder temperature imbalance must be monitored</li>
+                  </ul>
+                </div>
+              </div>
+              <button class="btn-select-arch" data-engine="BOXER">ACTIVE TWIN</button>
+            </div>
+
+            <!-- Card 3: Wankel Rotary Internal-Combustion Engine -->
+            <div class="engine-arch-card" id="card-arch-WANKEL_ROTARY" data-engine="WANKEL_ROTARY">
+              <div class="engine-arch-header">
+                <span class="engine-arch-icon">🔺</span>
+                <div class="engine-arch-badge">ROTARY IC // EPITROCHOID</div>
+              </div>
+              <h3 class="engine-arch-name">Wankel Rotary Internal-Combustion Engine</h3>
+              <div class="technical-note">Note: Rotary internal-combustion architecture; included for propulsion-system comparison.</div>
+              <p class="engine-arch-desc">Rotary internal-combustion engine using a triangular rotor moving inside an epitrochoid-like housing rather than conventional pistons.</p>
+              <div class="engine-arch-specs">
+                <div class="spec-section">
+                  <div class="spec-title">KEY STRENGTHS:</div>
+                  <ul class="spec-list strengths">
+                    <li>Compact architecture & low frontal area</li>
+                    <li>High power-to-weight potential</li>
+                    <li>Smooth operation & ultra-low reciprocating vibration</li>
+                  </ul>
+                </div>
+                <div class="spec-section">
+                  <div class="spec-title">KEY TRADE-OFFS:</div>
+                  <ul class="spec-list tradeoffs">
+                    <li>Thermal management challenge in hot arc</li>
+                    <li>Apex seal wear/degradation concern</li>
+                    <li>Fuel efficiency differs from piston engines</li>
+                  </ul>
+                </div>
+              </div>
+              <button class="btn-select-arch" data-engine="WANKEL_ROTARY">SELECT ENGINE</button>
+            </div>
+
+            <!-- Card 4: Turbocharged / Supercharged Multi-Cylinder Inline or V Engine -->
+            <div class="engine-arch-card" id="card-arch-TURBO_INLINE_V" data-engine="TURBO_INLINE_V">
+              <div class="engine-arch-header">
+                <span class="engine-arch-icon">🌀</span>
+                <div class="engine-arch-badge">FORCED INDUCTION // TURBO</div>
+              </div>
+              <h3 class="engine-arch-name">Turbocharged / Supercharged Multi-Cylinder Inline or V Engine</h3>
+              <p class="engine-arch-desc">Multi-cylinder inline or V-style engine with forced induction to sustain intake pressure and available power at altitude.</p>
+              <div class="engine-arch-specs">
+                <div class="spec-section">
+                  <div class="spec-title">KEY STRENGTHS:</div>
+                  <ul class="spec-list strengths">
+                    <li>Better high-altitude power retention (FL250+)</li>
+                    <li>Suitable for high-altitude MALE mission profiles</li>
+                    <li>Adjustable boost & manifold-pressure control</li>
+                  </ul>
+                </div>
+                <div class="spec-section">
+                  <div class="spec-title">KEY TRADE-OFFS:</div>
+                  <ul class="spec-list tradeoffs">
+                    <li>Added turbocharger/supercharger complexity</li>
+                    <li>Additional thermal load & heat rejection</li>
+                    <li>More failure modes in boost, lube & air-path</li>
+                  </ul>
+                </div>
+              </div>
+              <button class="btn-select-arch" data-engine="TURBO_INLINE_V">SELECT ENGINE</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demo Progress Banner (appears when demo running) -->
+        <div id="demo-scenario-banner" class="demo-scenario-banner" style="display: none;"></div>
+
+        <!-- Color Legend Bar -->
+        <div class="engine3d-legend-bar">
+          <span class="legend-item"><span class="legend-swatch" style="background:#10b981;"></span> Nominal</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#eab308;"></span> Caution</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#f97316;"></span> Warning</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#dc2626;"></span> Critical</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#a855f7;"></span> Sensor/ECU Inconsistency</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#38bdf8;"></span> Fluid / Fuel / Oil Flow</span>
+        </div>
+
+        <!-- Main Area: Full-Width 3D Viewport Above Telemetry Dashboard -->
+        <div class="engine3d-main-grid">
+
+          <!-- Full-Width Interactive 3D Viewport -->
+          <div class="engine3d-viewport-column">
+            <div class="engine3d-viewport-wrap" id="engine3d-viewport-wrap">
+              <!-- Three.js Canvas Container -->
+              <div id="engine3d-viewport-container" class="engine3d-viewport-container"></div>
+
+              <!-- HUD Top-Left: Digital Tachometer Overlay -->
+              <div class="engine3d-hud-rpm">
+                <div class="hud-rpm-label">ENGINE TACHOMETER</div>
+                <div class="hud-rpm-readout">
+                  <span class="hud-rpm-val font-mono" id="sim-hud-rpm-val">5200</span>
+                  <span class="hud-rpm-unit">RPM</span>
+                </div>
+                <div class="hud-rpm-caption">SYNCHRONIZED KINEMATICS</div>
+              </div>
+
+              <!-- HUD Top-Right: Camera Presets & Toggles -->
+              <div class="engine3d-hud-toolbar">
+                <div class="hud-btn-group">
+                  <button class="hud-btn" id="btn-cam-iso" title="Isometric View">ISO</button>
+                  <button class="hud-btn" id="btn-cam-front" title="Front View">FRONT</button>
+                  <button class="hud-btn" id="btn-cam-side" title="Side View">SIDE</button>
+                  <button class="hud-btn" id="btn-cam-top" title="Top View">TOP</button>
+                  <button class="hud-btn" id="btn-cam-exploded" title="Toggle Exploded Assembly View">💥 EXPLODED</button>
+                  <button class="hud-btn" id="btn-cam-reset" title="Reset Camera">↺ CAM</button>
+                </div>
+                <div class="hud-btn-group">
+                  <button class="hud-btn" id="btn-toggle-xray" title="Toggle X-Ray Cutaway Transparency">🔍 X-RAY: OFF</button>
+                  <button class="hud-btn active" id="btn-toggle-labels" title="Toggle 3D Component Labels">🏷️ LABELS: ON</button>
+                  <button class="hud-btn" id="btn-expand-3d" title="Full Screen Viewport">⛶ EXPAND</button>
+                </div>
+              </div>
+
+              <!-- Engine Asset Hot-Swap Loading Overlay -->
+              <div class="engine3d-loading-overlay" id="engine3d-loading-overlay" style="display: none;">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" id="engine3d-loading-text">HOT-SWAPPING ENGINE DIGITAL TWIN...</div>
+              </div>
+
+              <!-- Interactive Component Inspection Card (Docked Inside Viewport) -->
+              <div class="engine3d-inspection-card" id="engine3d-inspection-card" style="display: none;">
+                <div class="inspect-header">
+                  <div>
+                    <div class="inspect-title" id="inspect-title">Cylinder #3 [Left Bank Rear]</div>
+                    <div class="inspect-category" id="inspect-category">COMBUSTION CHAMBER // ROTAX 915 iS</div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="inspect-status-badge" id="inspect-status-badge">WARNING</span>
+                    <button class="inspect-close-btn" id="btn-close-inspect">✕</button>
+                  </div>
+                </div>
+
+                <div class="inspect-health-wrap">
+                  <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                    <span>Health Status Index:</span>
+                    <strong class="font-mono" id="inspect-health-val">68%</strong>
+                  </div>
+                  <div class="inspect-bar-track">
+                    <div class="inspect-bar-fill" id="inspect-health-bar" style="width: 68%; background: var(--color-warning);"></div>
+                  </div>
+                </div>
+
+                <div class="inspect-metrics-grid" id="inspect-live-metrics">
+                </div>
+
+                <div class="inspect-section">
+                  <div class="inspect-section-title">LIKELY OPERATIONAL ANOMALY:</div>
+                  <div class="inspect-issue-text" id="inspect-issue-text">Injector degradation / mixture imbalance</div>
+                  <div class="inspect-confidence">Correlation Confidence: <span class="font-mono" id="inspect-confidence-val">74%</span></div>
+                </div>
+
+                <div class="inspect-section">
+                  <div class="inspect-section-title">RECOMMENDED ENGINEERING ACTION:</div>
+                  <div class="inspect-action-text" id="inspect-action-text">Inspect injector nozzle and verify cylinder-level fuel flow after mission.</div>
+                </div>
+
+                <div class="inspect-disclaimer">
+                  ℹ️ Synthetic Digital Twin Demonstrator — Not certified flight diagnosis.
+                </div>
+              </div>
+
+              <!-- HUD Bottom Hint -->
+              <div class="engine3d-hud-footer">
+                <span>🖱️ Drag to rotate | Scroll to zoom | Right-click to pan | Click any component to inspect</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             HOW THIS ENGINE WORKS INFORMATION PANEL
+             ==================================================================== -->
+        <div class="engine-how-it-works-panel" id="engine-how-it-works-panel">
+          <div class="how-header">
+            <span class="how-insignia">ℹ️</span>
+            <div>
+              <h4 class="how-title" id="how-engine-title">HORIZONTALLY OPPOSED / BOXER RECIPROCATING-PISTON ENGINE — PROPULSION DIGEST</h4>
+              <span class="how-sub" id="how-engine-sub">PHYSICS INTEGRATION PROFILE // STANAG 4586 DEFENSE DIGITAL TWIN</span>
+            </div>
+          </div>
+          <div class="how-body-grid">
+            <div class="how-col">
+              <div class="how-col-title">WORKING PRINCIPLES:</div>
+              <ul class="how-bullets" id="how-bullets-principles">
+                <li>Horizontally opposed pistons move in symmetric opposing directions around a central crankshaft.</li>
+                <li>Inherently balanced reciprocating kinematics reduce primary vibrations transmitted to UAV avionics.</li>
+                <li>Low frontal height profile fits sleek, aerodynamically streamlined pusher or tractor nacelles.</li>
+              </ul>
+            </div>
+            <div class="how-col">
+              <div class="how-col-title">HEALTH & PROGNOSTICS MONITORING FOCUS:</div>
+              <div class="how-text" id="how-text-focus">Left-bank vs right-bank CHT thermal balance, cylinder-to-cylinder EGT distribution, crankcase vibration RMS, and spark ignition balance.</div>
+            </div>
+            <div class="how-col">
+              <div class="how-col-title">OPTIMAL MALE UAV MISSION CLASS:</div>
+              <div class="how-text" id="how-text-mission">Persistent medium-altitude reconnaissance and tactical border surveillance requiring low profile and low vibration.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telemetry Dashboard: 3-Column Layout Below Viewport -->
+        <div class="engine3d-dashboard">
+
+          <!-- Column 1: Live Telemetry Cards + Dynamic Balance -->
+          <div class="engine3d-telemetry-column">
+            <div class="telemetry-column-header">
+              <span id="telemetry-column-title">LIVE DIGITAL TWIN TELEMETRY</span>
+              <span class="badge-rate" id="telemetry-arch-badge">10 Hz EKF // BOXER</span>
+            </div>
+
+            <!-- Dynamic Telemetry Cards Grid -->
+            <div class="engine3d-cards-grid" id="sim-dynamic-cards-grid">
+              <!-- Populated dynamically based on active engine architecture -->
+            </div>
+
+            <!-- Dynamic Balance Panel (4-Cylinder or 3-Zone Rotor Chamber) -->
+            <div class="panel-card" style="margin-top: 10px; padding: 10px;" id="sim-dynamic-balance-card">
+              <div class="panel-title" id="sim-balance-title" style="font-size: 11px; margin-bottom: 8px;"><span>📊</span> 4-CYLINDER THERMAL BALANCE</div>
+              <div class="sim-cyl-list" id="sim-balance-list">
+                <!-- Populated dynamically based on active engine architecture -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Alerts + Diagnostics Reasoning -->
+          <div class="engine3d-info-column">
+            <!-- Active Alerts -->
+            <div class="panel-card" style="flex: 1;">
+              <div class="panel-title"><span>⚠️</span> ACTIVE SIMULATION ALERTS</div>
+              <div class="sim-alerts-list" id="sim-active-alerts-list">
+                <div class="sim-alert-empty">✓ All propulsion and electrical channels nominal.</div>
+              </div>
+            </div>
+
+            <!-- Explainable Fault Diagnostic Reasoning -->
+            <div class="panel-card" style="flex: 1;">
+              <div class="panel-title"><span>🧠</span> PHYSICS-INFORMED DIAGNOSTIC REASONING</div>
+              <div class="sim-explain-box font-mono" id="sim-fault-explain-text">
+                PHYSICS CORRELATION: EKF sensor residual within 0.05σ envelope. All 4 cylinders balanced. Lubrication and cooling operating at optimal cruise thermal equilibrium.
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 3: Mini Chart -->
+          <div class="engine3d-chart-column">
+            <div class="panel-card" style="height: 100%;">
+              <div class="panel-title" style="display: flex; justify-content: space-between;">
+                <span>📈 REAL-TIME TRENDS</span>
+                <div class="mini-chart-legend">
+                  <span style="color:#38bdf8;">■ RPM</span>
+                  <span style="color:#10b981;">■ CHT</span>
+                  <span style="color:#f97316;">■ EGT</span>
+                  <span style="color:#a855f7;">■ VIB</span>
+                </div>
+              </div>
+              <div class="mini-chart-canvas-wrap" style="height: 100%;">
+                <canvas id="engine3d-mini-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsible Simulation Controls & Fault Injection Drawer -->
+        <div class="engine3d-drawer-container">
+          <button class="btn-drawer-toggle" id="btn-toggle-sim-drawer">
+            ▼ SIMULATION CONTROLS & FAULT INJECTION
+          </button>
+
+          <div class="engine3d-drawer-content" id="engine3d-sim-drawer">
+            <!-- Row 1: Mission Profile & Environment -->
+            <div class="drawer-section">
+              <div class="drawer-section-title">1. MISSION PROFILE & FLIGHT ENVELOPE</div>
+              <div class="drawer-controls-row">
+                <div class="control-group">
+                  <label>Mission Profile:</label>
+                  <select class="mil-select" id="sim-profile-select">
+                    <option value="takeoff">Takeoff (Full Power)</option>
+                    <option value="climb">Climb Phase</option>
+                    <option value="cruise">High-Speed Cruise</option>
+                    <option value="loiter" selected>Loiter / Endurance (10k ft)</option>
+                    <option value="descent">Descent Phase</option>
+                    <option value="landing">Approach & Landing</option>
+                    <option value="custom">Custom Parameters</option>
+                  </select>
+                </div>
+
+                <div class="control-group">
+                  <label>Throttle Demand: <strong class="font-mono" id="sim-val-throttle">78%</strong></label>
+                  <input type="range" class="mil-slider" id="sim-slider-throttle" min="0" max="100" value="78">
+                </div>
+
+                <div class="control-group">
+                  <label>Altitude: <strong class="font-mono" id="sim-val-altitude">10,000 ft</strong></label>
+                  <input type="range" class="mil-slider" id="sim-slider-altitude" min="0" max="25000" step="500" value="10000">
+                </div>
+
+                <div class="control-group">
+                  <label>Ambient Temp: <strong class="font-mono" id="sim-val-temp">35 °C</strong></label>
+                  <input type="range" class="mil-slider" id="sim-slider-temp" min="-20" max="50" value="35">
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 2: Quick Presets -->
+            <div class="drawer-section">
+              <div class="drawer-section-title">2. FAULT INJECTION PRESETS</div>
+              <div class="drawer-presets-row">
+                <button class="btn-sim-preset" data-preset="nominal_cruise">Nominal Cruise</button>
+                <button class="btn-sim-preset" data-preset="hot_high">Hot & High</button>
+                <button class="btn-sim-preset" data-preset="cyl3_injector">Cyl 3 Injector Fault</button>
+                <button class="btn-sim-preset" data-preset="oil_loss">Low Oil Pressure</button>
+                <button class="btn-sim-preset" data-preset="misfire">Combustion Misfire</button>
+                <button class="btn-sim-preset" data-preset="vibration_spike">Severe Vibration</button>
+                <button class="btn-sim-preset" data-preset="sensor_drift">Sensor Drift (Purple)</button>
+                <button class="btn-sim-preset" data-preset="alternator_loss">Alternator Failure</button>
+              </div>
+            </div>
+
+            <!-- Row 3: Granular Fault Sliders -->
+            <div class="drawer-section">
+              <div class="drawer-section-title" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>3. GRANULAR FAULT INJECTION SLIDERS</span>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                    <input type="checkbox" id="sim-toggle-faults"> Enable Fault Injection
+                  </label>
+                  <label style="display:flex; align-items:center; gap:6px;">
+                    Target Cylinder:
+                    <select class="mil-select" id="sim-select-fault-cyl">
+                      <option value="3" selected>Cylinder 3 (Default)</option>
+                      <option value="1">Cylinder 1</option>
+                      <option value="2">Cylinder 2</option>
+                      <option value="4">Cylinder 4</option>
+                      <option value="all">All Cylinders</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="drawer-sliders-grid" id="sim-dynamic-fault-sliders">
+                <div class="fault-slider-card">
+                  <div class="fault-slider-header"><span>Overheating Severity</span><span class="font-mono" id="sim-val-overheating">0%</span></div>
+                  <input type="range" class="mil-slider fault-slider" id="sim-slider-overheating" min="0" max="100" value="0">
+                </div>
+
+                <div class="fault-slider-card">
+                  <div class="fault-slider-header"><span>Low Oil Pressure Severity</span><span class="font-mono" id="sim-val-oil-press">0%</span></div>
+                  <input type="range" class="mil-slider fault-slider" id="sim-slider-oil-press" min="0" max="100" value="0">
+                </div>
+
+                <div class="fault-slider-card">
+                  <div class="fault-slider-header"><span>Injector Degradation</span><span class="font-mono" id="sim-val-injector">0%</span></div>
+                  <input type="range" class="mil-slider fault-slider" id="sim-slider-injector" min="0" max="100" value="0">
+                </div>
+
+                <div class="fault-slider-card">
+                  <div class="fault-slider-header"><span>Combustion Misfire</span><span class="font-mono" id="sim-val-misfire">0%</span></div>
+                  <input type="range" class="mil-slider fault-slider" id="sim-slider-misfire" min="0" max="100" value="0">
+                </div>
+
+                <div class="fault-slider-card">
+                  <div class="fault-slider-header"><span>Abnormal Vibration</span><span class="font-mono" id="sim-val-vibration">0%</span></div>
+                  <input type="range" class="mil-slider fault-slider" id="sim-slider-vibration" min="0" max="100" value="0">
+                </div>
+
+                <div class="fault-slider-card">
+                  <div class="fault-slider-header"><span>Sensor Drift / Mismatch</span><span class="font-mono" id="sim-val-sensor-drift">0%</span></div>
+                  <input type="range" class="mil-slider fault-slider" id="sim-slider-sensor-drift" min="0" max="100" value="0">
+                </div>
+
+                <div class="fault-slider-card">
+                  <div class="fault-slider-header"><span>Alternator Degradation</span><span class="font-mono" id="sim-val-alternator">0%</span></div>
+                  <input type="range" class="mil-slider fault-slider" id="sim-slider-alternator" min="0" max="100" value="0">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           TAB 9: DEFENCE-GRADE INTEGRATION & ASSURANCE LAYER
+           ==================================================================== -->
+      <section class="tab-view-container" id="view-assurance" style="display: none;">
+        <div class="assurance-container">
+          <!-- Top Title Bar -->
+          <div class="assurance-header-bar">
+            <div class="assurance-title-wrap">
+              <h2><span>🛡️</span> DEFENCE-GRADE INTEGRATION & ASSURANCE LAYER</h2>
+              <p style="font-size:11px; color:var(--text-muted); margin-top:2px;">
+                Demonstrating the technical gap between hackathon prototype and authorized Ground Control Station integration
+              </p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="disclaimer-badge">DEMONSTRATOR MODE</span>
+              <span style="font-family:var(--font-mono); font-size:11px; color:#059669; font-weight:700;">READ-ONLY ADVISORY</span>
+            </div>
+          </div>
+
+          <!-- 7 Sub-Navigation Tabs -->
+          <div class="assurance-subtabs">
+            <button class="assurance-tab-btn active" data-subtab="gateway">
+              <span>📡 Data Gateway</span>
+            </button>
+            <button class="assurance-tab-btn" data-subtab="quality">
+              <span>🔍 Data Quality</span>
+              <span class="badge-count" id="badge-quality-score">98</span>
+            </button>
+            <button class="assurance-tab-btn" data-subtab="cyber">
+              <span>🛡️ Cybersecurity</span>
+            </button>
+            <button class="assurance-tab-btn" data-subtab="model">
+              <span>🧠 Model Assurance</span>
+            </button>
+            <button class="assurance-tab-btn" data-subtab="audit">
+              <span>📜 Audit & Traceability</span>
+            </button>
+            <button class="assurance-tab-btn" data-subtab="degraded">
+              <span>⚠️ Degraded Operations</span>
+            </button>
+            <button class="assurance-tab-btn" data-subtab="roadmap">
+              <span>🚀 Deployment Roadmap</span>
+            </button>
+          </div>
+
+          <!-- 7 Sub-Panes -->
+          <div class="assurance-pane active" id="assurance-pane-gateway">
+            <div id="assurance-gateway-content"></div>
+          </div>
+
+          <div class="assurance-pane" id="assurance-pane-quality">
+            <div id="assurance-quality-content"></div>
+          </div>
+
+          <div class="assurance-pane" id="assurance-pane-cyber">
+            <div id="assurance-cyber-content"></div>
+          </div>
+
+          <div class="assurance-pane" id="assurance-pane-model">
+            <div id="assurance-model-content"></div>
+          </div>
+
+          <div class="assurance-pane" id="assurance-pane-audit">
+            <div id="assurance-audit-content"></div>
+          </div>
+
+          <div class="assurance-pane" id="assurance-pane-degraded">
+            <div id="assurance-degraded-content"></div>
+          </div>
+
+          <div class="assurance-pane" id="assurance-pane-roadmap">
+            <div id="assurance-roadmap-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           MULTI-ENGINE MISSION COMPARISON MODAL
+           ==================================================================== -->
+      <div class="tactical-modal-overlay" id="modal-engine-comparison" style="display: none;">
+        <div class="tactical-modal-dialog modal-comparison-dialog">
+          <div class="tactical-modal-header">
+            <div class="modal-title-wrap">
+              <span class="modal-insignia">📊</span>
+              <div>
+                <h3>MULTI-ENGINE PROPULSION ARCHITECTURE MISSION COMPARISON</h3>
+                <p>SYNTHETIC DIGITAL TWIN MISSION ENVELOPE & PERFORMANCE EVALUATION</p>
+              </div>
+            </div>
+            <button type="button" class="modal-close-btn" id="btn-close-comparison-modal" title="Close comparison">&times;</button>
+          </div>
+
+          <div class="comparison-disclaimer-banner">
+            ⚠️ SYNTHETIC DEMONSTRATOR ESTIMATE — NOT CERTIFIED ENGINE PERFORMANCE DATA
+          </div>
+
+          <!-- Mission Control Inputs Row -->
+          <div class="comparison-controls-row">
+            <div class="comp-input-group">
+              <label for="comp-mission-profile">Mission Profile:</label>
+              <select id="comp-mission-profile" class="mil-select">
+                <option value="loiter" selected>Extended Loiter (10,000 ft / 72% Throt)</option>
+                <option value="cruise">High-Speed Cruise (12,000 ft / 80% Throt)</option>
+                <option value="climb">High-Altitude Ceiling Climb (FL250 / 95% Throt)</option>
+                <option value="hot_high">Hot & High Desert Ops (14,000 ft / 42°C)</option>
+              </select>
+            </div>
+            <div class="comp-input-group">
+              <label for="comp-mission-alt">Altitude (ft):</label>
+              <input type="number" id="comp-mission-alt" class="mil-input" value="10000" min="0" max="28000" step="1000">
+            </div>
+            <div class="comp-input-group">
+              <label for="comp-mission-oat">Ambient Temp (°C):</label>
+              <input type="number" id="comp-mission-oat" class="mil-input" value="35" min="-30" max="50" step="1">
+            </div>
+            <div class="comp-input-group">
+              <label for="comp-mission-duration">Duration (hrs):</label>
+              <input type="number" id="comp-mission-duration" class="mil-input" value="12" min="1" max="24" step="1">
+            </div>
+            <div class="comp-input-group">
+              <label for="comp-mission-fault">Stress / Fault Option:</label>
+              <select id="comp-mission-fault" class="mil-select">
+                <option value="nominal" selected>Nominal Standard Flight</option>
+                <option value="thermal_stress">Severe Thermal Stress (+45°C OAT)</option>
+                <option value="fuel_degradation">Injection / Fuel Delivery Degradation</option>
+                <option value="vibration_stress">High Mechanical Vibration Harmonics</option>
+              </select>
+            </div>
+            <button type="button" class="mil-btn btn-primary" id="btn-recalculate-comparison">
+              ⚡ RUN EVALUATION
+            </button>
+          </div>
+
+          <!-- Comparative Analysis Table -->
+          <div class="comparison-table-wrap">
+            <table class="comparison-table" id="engine-comparison-table">
+              <thead>
+                <tr>
+                  <th>Evaluation Metric</th>
+                  <th class="col-heavy">Heavy-Fuel CI</th>
+                  <th class="col-boxer">Boxer (Opposed)</th>
+                  <th class="col-wankel">Wankel Rotary</th>
+                  <th class="col-turbo">Turbocharged Inline/V</th>
+                </tr>
+              </thead>
+              <tbody id="engine-comparison-tbody">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Technical Architecture Comparison Explanatory Notes -->
+          <div class="comparison-notes-grid">
+            <div class="comp-note-card">
+              <div class="note-header"><span>⛽</span> Heavy-Fuel CI Note:</div>
+              <p>Heavy-fuel mode emphasizes endurance-oriented fuel efficiency characteristics and injection-system health under tactical military fuel distribution.</p>
+            </div>
+            <div class="comp-note-card">
+              <div class="note-header"><span>↔️</span> Boxer Engine Note:</div>
+              <p>Boxer mode emphasizes compact installation geometry, low frontal area, and cylinder-bank thermal balance across left and right nacelle ducts.</p>
+            </div>
+            <div class="comp-note-card">
+              <div class="note-header"><span>🔺</span> Wankel Rotary Note:</div>
+              <p>Wankel mode shows compactness and low reciprocating vibration characteristics for EO/IR sensors, but thermal/seal health is a primary monitoring focus.</p>
+            </div>
+            <div class="comp-note-card">
+              <div class="note-header"><span>🌀</span> Turbocharged Engine Note:</div>
+              <p>Turbocharged mode retains synthetic manifold pressure better at high altitude (FL250+ ceilings), but adds thermal and boost-system complexity.</p>
+            </div>
+          </div>
+
+          <div class="modal-actions-bar" style="justify-content: space-between;">
+            <span style="font-size: 11px; color: var(--text-secondary); font-family: var(--font-mono);">
+              Click any column in the 3D lab to deploy that propulsion system.
+            </span>
+            <button type="button" class="mil-btn" id="btn-close-comp-modal-bottom">CLOSE EVALUATION</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Commission New UAV Tactical Modal Dialog -->
+  <div class="tactical-modal-overlay" id="modal-add-uav" style="display: none;">
+    <div class="tactical-modal-dialog">
+      <div class="tactical-modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-insignia">⚡</span>
+          <div>
+            <h3>COMMISSION NEW UAV AIRFRAME</h3>
+            <p>STANAG 4586 DIGITAL TWIN NODE REGISTRATION</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-uav-modal" title="Close dialog">&times;</button>
+      </div>
+
+      <!-- Quick Presets Bar -->
+      <div class="modal-presets-bar">
+        <span>QUICK PRESETS:</span>
+        <button type="button" class="preset-btn" data-preset="uav5">UAV-05 (MALE Mk II)</button>
+        <button type="button" class="preset-btn" data-preset="reaper">MQ-9 Reaper Class</button>
+        <button type="button" class="preset-btn" data-preset="tb2">Bayraktar TB2 Class</button>
+        <button type="button" class="preset-btn" data-preset="highalt">High-Alt (916 iS)</button>
+      </div>
+
+      <form id="form-add-uav" class="tactical-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="uav-input-id">UAV Callsign / Identifier *</label>
+            <input type="text" id="uav-input-id" class="mil-input" placeholder="e.g. UAV-05" required maxlength="20">
+            <span class="form-hint">Unique tactical network ID</span>
+          </div>
+
+          <div class="form-group">
+            <label for="uav-input-name">Tactical Unit Name</label>
+            <input type="text" id="uav-input-name" class="mil-input" placeholder="e.g. UAV #05 [Sentinel]" maxlength="50">
+            <span class="form-hint">Display designation</span>
+          </div>
+
+          <div class="form-group">
+            <label for="uav-input-tail">Tail Number / Serial</label>
+            <input type="text" id="uav-input-tail" class="mil-input" placeholder="e.g. AF-9025" maxlength="25">
+            <span class="form-hint">Military tail registration</span>
+          </div>
+
+          <div class="form-group">
+            <label for="uav-input-airframe">Airframe Class *</label>
+            <select id="uav-input-airframe" class="mil-select" style="width: 100%;">
+              <option value="AeroTwin MALE Mk II" selected>AeroTwin MALE Mk II (Standard ISR)</option>
+              <option value="AeroTwin MALE Mk III">AeroTwin MALE Mk III (High-Altitude Loiter)</option>
+              <option value="MQ-9 Reaper Class">MQ-9 Reaper Class (Extended Range)</option>
+              <option value="Bayraktar TB2 Class">Bayraktar TB2 Class (Tactical Medium)</option>
+              <option value="Hermes 900 Class">Hermes 900 Class (Maritime & Overland)</option>
+              <option value="Custom Prototype UAV">Custom Prototype Airframe</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="uav-input-engine">Propulsion Engine *</label>
+            <select id="uav-input-engine" class="mil-select" style="width: 100%;">
+              <option value="Rotax 915 iS (141 hp)" selected>Rotax 915 iS (141 hp Turbocharged MVEM)</option>
+              <option value="Rotax 916 iS (160 hp)">Rotax 916 iS (160 hp High-Ceiling Turbo)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="uav-input-hours">Initial Flight Hours (TTAF)</label>
+            <input type="number" step="0.1" min="0" id="uav-input-hours" class="mil-input" value="0.0">
+            <span class="form-hint">Accumulated airframe hours</span>
+          </div>
+
+          <div class="form-group">
+            <label for="uav-input-status">Operational Status</label>
+            <select id="uav-input-status" class="mil-select" style="width: 100%;">
+              <option value="Active">Active (Switch GCS Monitored Twin Now)</option>
+              <option value="Standby" selected>Standby (Ready Alert / Hangar)</option>
+              <option value="Maintenance">Maintenance (Scheduled Servicing)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="uav-input-location">Operating Base / Station</label>
+            <input type="text" id="uav-input-location" class="mil-input" placeholder="e.g. Forward Operating Base Alpha" value="Forward Operating Base Alpha" maxlength="50">
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="uav-input-notes">Mission Notes & Assignment</label>
+            <input type="text" id="uav-input-notes" class="mil-input" placeholder="e.g. Border patrol & maritime reconnaissance sortie" maxlength="150">
+          </div>
+        </div>
+
+        <div class="modal-actions-bar">
+          <button type="button" class="mil-btn" id="btn-cancel-uav-modal">CANCEL</button>
+          <button type="submit" class="mil-btn btn-primary" id="btn-submit-uav">
+            ⚡ COMMISSION AIRFRAME
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Vendor & 3D Engine Scripts -->
+  <script src="js/vendor/three.min.js"></script>
+  <script src="js/vendor/OrbitControls.js"></script>
+  <script src="js/engine_configs.js"></script>
+  <script src="js/engine_3d_heavy_fuel.js"></script>
+  <script src="js/engine_3d_wankel.js"></script>
+  <script src="js/engine_3d_turbo.js"></script>
+  <script src="js/engine_3d_sim.js"></script>
+  <script src="js/engine_3d_model.js"></script>
+  <script src="js/engine_3d_view.js"></script>
+
+  <!-- Existing Application Scripts -->
+  <script src="js/chart_engine.js"></script>
+  <script src="js/live_view.js"></script>
+  <script src="js/health_view.js"></script>
+  <script src="js/alerts_view.js"></script>
+  <script src="js/replay_view.js"></script>
+  <script src="js/scenarios_view.js"></script>
+  <script src="js/missions_view.js"></script>
+  <script src="js/settings_view.js"></script>
+  <script src="js/advisory_view.js"></script>
+  <script src="js/assurance_manager.js"></script>
+  <script src="js/assurance_view.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/ai_advisory_widget.js?v=3"></script>
+
+</body>
+</html>

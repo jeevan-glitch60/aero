@@ -1,0 +1,75 @@
+{
+  "active_uav_id": "UAV-03",
+  "fleet": [
+    {
+      "id": "UAV-01",
+      "name": "UAV #01 [Recon]",
+      "callsign": "Valkyrie-1",
+      "tail_number": "AF-9021",
+      "airframe": "AeroTwin MALE Mk II",
+      "engine_model": "Rotax 915 iS (141 hp)",
+      "flight_hours": 342.5,
+      "status": "Standby",
+      "health_score": 88,
+      "location": "Hangar 2 - Base Alpha",
+      "is_default": true,
+      "notes": "Post-mission inspection completed. Ready for sortie."
+    },
+    {
+      "id": "UAV-02",
+      "name": "UAV #02 [Patrol]",
+      "callsign": "Valkyrie-2",
+      "tail_number": "AF-9022",
+      "airframe": "AeroTwin MALE Mk I",
+      "engine_model": "Rotax 915 iS (141 hp)",
+      "flight_hours": 512.8,
+      "status": "Maintenance",
+      "health_score": 79,
+      "location": "Depot Line 4",
+      "is_default": true,
+      "notes": "Scheduled 500h turbocharger and injector borescope check."
+    },
+    {
+      "id": "UAV-03",
+      "name": "UAV #03 [Active]",
+      "callsign": "Valkyrie-3",
+      "tail_number": "AF-9023",
+      "airframe": "AeroTwin MALE Mk II",
+      "engine_model": "Rotax 915 iS (141 hp)",
+      "flight_hours": 182.4,
+      "status": "Active",
+      "health_score": 92,
+      "location": "Combat Air Patrol FL180",
+      "is_default": true,
+      "notes": "Primary digital twin node streaming 10 Hz STANAG 4586 telemetry."
+    },
+    {
+      "id": "UAV-04",
+      "name": "UAV #04 [High-Alt]",
+      "callsign": "Valkyrie-4",
+      "tail_number": "AF-9024",
+      "airframe": "AeroTwin MALE Mk III",
+      "engine_model": "Rotax 916 iS (160 hp)",
+      "flight_hours": 45.0,
+      "status": "Standby",
+      "health_score": 98,
+      "location": "Ready Hangar 1",
+      "is_default": true,
+      "notes": "High ceiling configuration with intercooler optimization."
+    },
+    {
+      "id": "UAV-05",
+      "name": "UAV #05 [Valkyrie-V]",
+      "callsign": "Valkyrie-5",
+      "tail_number": "AF-9025",
+      "airframe": "AeroTwin MALE Mk II",
+      "engine_model": "Rotax 915 iS (141 hp)",
+      "flight_hours": 0.0,
+      "status": "Standby",
+      "health_score": 96,
+      "location": "Forward Operating Base Alpha",
+      "is_default": false,
+      "notes": "Commissioned via live verification test"
+    }
+  ]
+}

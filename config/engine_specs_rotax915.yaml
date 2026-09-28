@@ -1,0 +1,93 @@
+# Aero Piston Engine Specification: Rotax 915/916 iS Class Turbocharged UAV Engine
+engine_meta:
+  name: "Rotax 915 iS / UAV MALE Class"
+  type: "4-Cylinder 4-Stroke Opposed Boxer"
+  aspiration: "Turbocharged with Intercooler and Electronic Wastegate"
+  fuel_system: "Dual Redundant FADEC EFI"
+  cooling: "Liquid-Cooled Cylinder Heads, Ram-Air Cooled Cylinder Barrels"
+  dry_weight_kg: 84.6
+  displacement_cc: 1352.0
+  bore_mm: 84.0
+  stroke_mm: 61.0
+  compression_ratio: 8.2
+  number_of_cylinders: 4
+  firing_order: [1, 4, 3, 2]
+
+operating_limits:
+  max_takeoff_power_hp: 141.0
+  max_takeoff_rpm: 5800.0
+  max_continuous_power_hp: 135.0
+  max_continuous_rpm: 5500.0
+  idle_rpm: 1400.0
+  gearbox_ratio: 2.54167   # Crankshaft to Propeller reduction ratio
+
+thresholds:
+  rpm:
+    min_caution: 1300.0
+    normal_min: 1400.0
+    normal_max: 5500.0
+    caution_max: 5800.0
+    alarm_max: 5850.0
+  manifold_pressure_hpa:
+    min_caution: 500.0
+    normal_min: 700.0
+    normal_max: 1550.0      # ~45.8 inHg max continuous boost
+    caution_max: 1650.0     # ~48.7 inHg takeoff boost
+    alarm_max: 1750.0
+  oil_temperature_c:
+    alarm_min: 40.0
+    caution_min: 50.0
+    normal_min: 70.0
+    normal_max: 115.0
+    caution_max: 130.0
+    alarm_max: 140.0
+  oil_pressure_bar:
+    alarm_min: 0.8
+    caution_min: 1.5
+    normal_min: 2.0
+    normal_max: 5.0
+    caution_max: 6.0
+    alarm_max: 7.0
+  cylinder_head_temperature_c:
+    normal_min: 60.0
+    normal_max: 120.0
+    caution_max: 135.0
+    alarm_max: 140.0
+  exhaust_gas_temperature_c:
+    normal_min: 650.0
+    normal_max: 850.0
+    caution_max: 880.0
+    alarm_max: 920.0
+  fuel_pressure_bar:
+    alarm_min: 2.5
+    caution_min: 2.8
+    normal_min: 3.0
+    normal_max: 3.4
+    caution_max: 3.6
+    alarm_max: 3.8
+  coolant_temperature_c:
+    normal_min: 65.0
+    normal_max: 110.0
+    caution_max: 115.0
+    alarm_max: 120.0
+
+turbocharger:
+  max_boost_pressure_ratio: 2.85
+  compressor_efficiency_peak: 0.76
+  turbine_efficiency_peak: 0.74
+  intercooler_effectiveness_nominal: 0.78
+  wastegate_actuator_time_constant_s: 0.25
+  critical_altitude_m: 4572.0   # 15,000 ft critical altitude for full boost
+
+thermal_capacitances:
+  cylinder_head_j_per_k: 4200.0
+  oil_sump_j_per_k: 8500.0
+  coolant_jacket_j_per_k: 12000.0
+  convective_heat_transfer_coeff_air: 45.0
+  convective_heat_transfer_coeff_oil: 180.0
+
+fuel_properties:
+  type: "AVGAS 100LL / Unleaded Super 95"
+  lower_heating_value_mj_per_kg: 43.5
+  stoichiometric_afr: 14.7
+  density_kg_per_l: 0.74

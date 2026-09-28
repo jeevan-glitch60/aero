@@ -1,0 +1,496 @@
+/* ==========================================================================
+   AI COPILOT — ACTION ADVISORY WIDGET
+   Defense-Grade Decision-Support GCS Component (Rotax 915/916 iS Class)
+   Clean White Professional Aviation Theme (STANAG 4586 Compliant)
+   ========================================================================== */
+
+/* 1. Root Container (Fixed, non-layout-altering floating anchor) */
+.ai-advisory-root {
+  position: fixed;
+  bottom: 46px; /* Positioned slightly above existing bottom status strip */
+  right: 20px;
+  z-index: 9999; /* High elevation above dashboard panels */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #0f172a;
+  line-height: 1.4;
+  pointer-events: auto;
+  user-select: none;
+}
+
+/* 2. Floating Launcher Button (Header Dark Navy Accent) */
+.ai-advisory-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 140px;
+  height: 34px;
+  background-color: #0a1f38; /* Matches dark navy header */
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 6px rgba(10, 31, 56, 0.25);
+}
+
+.ai-advisory-btn:hover {
+  background-color: #0f294a;
+  border-color: #0284c7;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+}
+
+.ai-advisory-btn:active {
+  background-color: #061527;
+}
+
+/* 3. Status Indicator Dot */
+.ai-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.ai-status-dot.status-normal {
+  background-color: #059669;
+}
+
+.ai-status-dot.status-advisory {
+  background-color: #0284c7;
+}
+
+.ai-status-dot.status-warning {
+  background-color: #d97706;
+  animation: ai-pulse 1.8s infinite;
+}
+
+.ai-status-dot.status-critical {
+  background-color: #dc2626;
+  animation: ai-pulse 1.2s infinite;
+}
+
+@keyframes ai-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+/* 4. Professional Clean White Overlay Panel */
+.ai-advisory-panel {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 390px;
+  max-width: 420px;
+  max-height: 70vh;
+  background-color: #ffffff; /* Crisp white surface */
+  color: #0f172a; /* Deep Slate text */
+  border: 1px solid #cbd5e1; /* Crisp Slate border */
+  border-top: 3px solid #0284c7; /* Aviation blue trim */
+  border-radius: 6px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16), 0 4px 10px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: text;
+}
+
+/* 5. Panel Header */
+.ai-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background-color: #f8fafc; /* Crisp off-white header */
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.ai-panel-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-panel-title {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #0f172a;
+  font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+}
+
+.ai-live-tag {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ai-close-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #64748b;
+  font-size: 18px;
+  line-height: 1;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.ai-close-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+/* 6. Scrollable Content Body */
+.ai-panel-body {
+  padding: 14px 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #ffffff;
+}
+
+/* Custom Tactical Scrollbar */
+.ai-panel-body::-webkit-scrollbar {
+  width: 6px;
+}
+.ai-panel-body::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+.ai-panel-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+.ai-panel-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 7. Section 1: Assessment Header Card */
+.ai-assessment-card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ai-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+}
+
+.ai-meta-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.ai-meta-value {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ai-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ai-badge.badge-normal {
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1px solid #10b981;
+}
+
+.ai-badge.badge-advisory {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #0284c7;
+}
+
+.ai-badge.badge-warning {
+  background-color: #fffbeb;
+  color: #b45309;
+  border: 1px solid #f59e0b;
+}
+
+.ai-badge.badge-critical {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #ef4444;
+}
+
+/* 8. Common Section Headers */
+.ai-section-title {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: #0369a1; /* High-contrast Aero Navy-Blue */
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Section 2: Explanation Box */
+.ai-explanation-box {
+  background-color: #f0f7ff;
+  border-left: 3px solid #0284c7;
+  border-radius: 0 4px 4px 0;
+  padding: 9px 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #1e293b;
+}
+
+/* Section 3: Recommended Actions */
+.ai-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ai-action-item {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #1e293b;
+}
+
+/* Section 4: Post-Flight Maintenance */
+.ai-maint-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 9px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ai-priority-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 11px;
+}
+
+.ai-priority-val {
+  font-weight: 800;
+  color: #b45309; /* Clear Amber */
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+}
+
+.ai-maint-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #334155;
+}
+
+/* Section 5: Why AI Thinks This (Collapsible) */
+.ai-collapsible-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  padding: 8px 12px;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.ai-collapsible-trigger:hover {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.ai-collapsible-arrow {
+  font-size: 10px;
+  color: #0284c7;
+  transition: transform 0.2s ease;
+}
+
+.ai-collapsible-arrow.open {
+  transform: rotate(90deg);
+}
+
+.ai-collapsible-content {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  padding: 11px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ai-evidence-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+  color: #334155;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.4;
+}
+
+/* Contribution Bars */
+.ai-bars-container {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 6px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.ai-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ai-bar-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+.ai-bar-track {
+  width: 100%;
+  height: 6px;
+  background-color: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ai-bar-fill {
+  height: 100%;
+  background-color: #0284c7;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Section 6: Prognostics & Recommendation */
+.ai-prognostics-card {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ai-prog-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+}
+
+.ai-prog-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+.ai-mission-recommendation-box {
+  margin-top: 3px;
+  padding: 8px 10px;
+  background-color: #fffbeb;
+  border-left: 3px solid #d97706;
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #92400e;
+  font-weight: 600;
+}
+
+.ai-mission-recommendation-box.rec-critical {
+  background-color: #fef2f2;
+  border-left-color: #dc2626;
+  color: #991b1b;
+}
+
+.ai-mission-recommendation-box.rec-normal {
+  background-color: #ecfdf5;
+  border-left-color: #059669;
+  color: #065f46;
+}
+
+/* 9. Panel Footer Disclaimer */
+.ai-panel-footer {
+  padding: 9px 14px;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  font-size: 9.5px;
+  line-height: 1.4;
+  color: #64748b;
+  text-align: center;
+  flex-shrink: 0;
+  letter-spacing: 0.2px;
+}

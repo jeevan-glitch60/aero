@@ -1,0 +1,94 @@
+# MALE UAV Flight Profiles
+profiles:
+  standard_isr_18h:
+    name: "Standard MALE ISR Patrol (18 Hours)"
+    description: "Standard reconnaissance profile with high-altitude loiter at FL180"
+    phases:
+      - name: "Engine Warmup & Ground Taxi"
+        duration_s: 180
+        throttle_pct: 22.0
+        target_rpm: 2000.0
+        altitude_m: 100.0
+        airspeed_kts: 15.0
+      - name: "Takeoff Run & Initial Climb"
+        duration_s: 120
+        throttle_pct: 100.0
+        target_rpm: 5800.0
+        altitude_m: 500.0
+        airspeed_kts: 75.0
+      - name: "Enroute Climb to FL180"
+        duration_s: 900
+        throttle_pct: 88.0
+        target_rpm: 5500.0
+        altitude_m: 5486.0   # 18,000 ft
+        airspeed_kts: 90.0
+      - name: "High Altitude Long-Endurance Loiter"
+        duration_s: 3600     # Simulated block for demo/replay
+        throttle_pct: 58.0
+        target_rpm: 4800.0
+        altitude_m: 5486.0
+        airspeed_kts: 80.0
+      - name: "Descent & Approach"
+        duration_s: 600
+        throttle_pct: 35.0
+        target_rpm: 3800.0
+        altitude_m: 300.0
+        airspeed_kts: 70.0
+      - name: "Landing & Cool Down Taxi"
+        duration_s: 120
+        throttle_pct: 18.0
+        target_rpm: 1800.0
+        altitude_m: 100.0
+        airspeed_kts: 10.0
+
+  high_altitude_recon_fl250:
+    name: "High-Altitude Reconnaissance (FL250)"
+    description: "Ceiling stress test profile climbing to 25,000 ft near critical turbo limits"
+    phases:
+      - name: "Ground Runup"
+        duration_s: 120
+        throttle_pct: 25.0
+        target_rpm: 2200.0
+        altitude_m: 200.0
+        airspeed_kts: 0.0
+      - name: "Maximum Power Climb"
+        duration_s: 1200
+        throttle_pct: 95.0
+        target_rpm: 5500.0
+        altitude_m: 7620.0   # 25,000 ft
+        airspeed_kts: 85.0
+      - name: "Sub-Zero Ceiling Loiter"
+        duration_s: 2400
+        throttle_pct: 65.0
+        target_rpm: 5000.0
+        altitude_m: 7620.0
+        airspeed_kts: 82.0
+      - name: "Steep Glide Descent"
+        duration_s: 500
+        throttle_pct: 28.0
+        target_rpm: 3200.0
+        altitude_m: 500.0
+        airspeed_kts: 95.0
+
+  hot_and_high_test:
+    name: "Hot & High Takeoff Challenge"
+    description: "High density altitude airfield (5,000 ft elev, +38°C ambient) with rapid thermal load"
+    phases:
+      - name: "High Heat Ground Soak"
+        duration_s: 200
+        throttle_pct: 30.0
+        target_rpm: 2400.0
+        altitude_m: 1524.0
+        airspeed_kts: 0.0
+      - name: "Extended Max Takeoff Run"
+        duration_s: 180
+        throttle_pct: 100.0
+        target_rpm: 5800.0
+        altitude_m: 2000.0
+        airspeed_kts: 70.0
+      - name: "Immediate Step Climb"
+        duration_s: 600
+        throttle_pct: 90.0
+        target_rpm: 5500.0
+        altitude_m: 3500.0
+        airspeed_kts: 80.0

@@ -1,0 +1,137 @@
+# ==============================================================================
+# AEROTWIN // FAULT SIGNATURES & FAILURE MODES CONFIGURATION
+# Defense-Grade Integration & Assurance Layer Compliant
+# Demonstrator Mode // Synthetic Data // Read-Only Advisory Digital Twin
+# ==============================================================================
+
+faults:
+  wastegate_stuck_open:
+    id: "FA-01"
+    name: "Wastegate Actuator Stuck Open"
+    category: "Aspiration / Boost"
+    description: "Wastegate fails to close, causing turbocharger boost loss at altitude, deficient MAP, and power loss."
+    severity: "CRITICAL"
+    symptoms:
+      map_deficit_pct_min: 15.0
+      turbo_speed_drop_pct: 25.0
+      power_loss_pct: 20.0
+      egt_delta: 0.0
+    prior_probability: 0.08
+    affected_components: ["turbocharger", "wastegate_actuator"]
+    alternative_explanation: "Barometric sensor calibration offset or wastegate pneumatic signal tube micro-leakage"
+    recommended_follow_up: "Inspect wastegate servo actuator linkage and ECU boost control solenoid using authorized maintenance procedure."
+    model_basis: "Centrifugal compressor mass-flow vs pressure ratio map residual"
+    system_limitation: "Not a confirmed diagnosis; illustrative model output only. Digital Twin is read-only advisory."
+
+  intercooler_fouling:
+    id: "FA-02"
+    name: "Intercooler (CAC) Core Fouling / Airflow Blockage"
+    category: "Intake / Thermal"
+    description: "Charge air cooler heat exchange efficiency drops due to dust, debris, or internal oil film."
+    severity: "WARNING"
+    symptoms:
+      mat_elevation_deg_c: 22.0
+      cht_elevation_deg_c: 12.0
+      vol_eff_drop_pct: 5.0
+    prior_probability: 0.12
+    affected_components: ["intercooler", "intake_manifold"]
+    alternative_explanation: "Extreme ambient temperature inversion, forward nacelle ram-air duct stagnation, or oil mist accumulation"
+    recommended_follow_up: "Perform borescope inspection of CAC core for foreign object debris; clean charge cooler cooling fins."
+    model_basis: "Charge air heat exchanger thermal effectiveness (NTU-method)"
+    system_limitation: "Not a confirmed diagnosis; illustrative model output only."
+
+  injector_lean_drift_cyl2:
+    id: "FA-03"
+    name: "Cylinder #2 Fuel Injector Partial Clogging"
+    category: "Fuel Injection"
+    description: "Cylinder 2 fuel injector delivers 18% less fuel than commanded, resulting in severe local lean burn."
+    severity: "CRITICAL"
+    symptoms:
+      cyl2_egt_spike_deg_c: 75.0
+      cyl2_cht_spike_deg_c: 24.0
+      egt_imbalance_deg_c: 65.0
+    prior_probability: 0.15
+    affected_components: ["injector_cyl2", "cylinder_head_2"]
+    alternative_explanation: "Cylinder #2 EGT thermocouple bias drift, wiring harness micro-vibration resistance, or localized intake runner gasket leak"
+    recommended_follow_up: "Verify thermocouple consistency; inspect injector flow pattern and fuel rail filter basket using approved procedure."
+    model_basis: "Multi-cylinder combustion energy balance and acoustic vibration harmonic analysis"
+    system_limitation: "Not a confirmed diagnosis; illustrative model output only."
+
+  piston_ring_blowby_cyl3:
+    id: "FA-04"
+    name: "Cylinder #3 Piston Ring Wear / Blow-by"
+    category: "Mechanical Combustion"
+    description: "Compression seal breakdown causing hot combustion gas leakage into crankcase, high oil temp, and power loss."
+    severity: "WARNING"
+    symptoms:
+      oil_temp_rise_deg_c: 15.0
+      oil_pressure_variance_pct: -8.0
+      power_loss_pct: 8.0
+      liner_wear_factor: 2.8
+    prior_probability: 0.10
+    affected_components: ["piston_rings_cyl3", "cylinder_liner_3", "oil_system"]
+    alternative_explanation: "Oil pressure transducer degradation, oil cooler thermostatic bypass valve float, or severe crankcase breather restriction"
+    recommended_follow_up: "Perform differential compression check on Cylinder 3; inspect crankcase blow-by breather for oil misting."
+    model_basis: "Orifice leakage flow model and crankcase thermodynamic energy balance"
+    system_limitation: "Not a confirmed diagnosis; illustrative model output only."
+
+  oil_cooler_blockage:
+    id: "FA-05"
+    name: "Oil Cooler Radiator Airflow Restriction"
+    category: "Lubrication / Thermal"
+    description: "Oil heat exchanger airflow reduced by debris, causing rapid rise in oil temperature and oil viscosity thinning."
+    severity: "CRITICAL"
+    symptoms:
+      oil_temp_rise_deg_c: 28.0
+      oil_pressure_drop_pct: 18.0
+    prior_probability: 0.09
+    affected_components: ["oil_cooler", "oil_pump"]
+    alternative_explanation: "Oil cooler bypass valve sticking open, viscosity thinning from thermal breakdown, or sensor drift"
+    recommended_follow_up: "Check oil cooler cowl flap opening and radiator matrix for debris/insect obstruction; verify oil viscosity sample."
+    model_basis: "Lumped-parameter lubrication circuit thermal model"
+    system_limitation: "Not a confirmed diagnosis; illustrative model output only."
+
+  map_sensor_drift:
+    id: "FA-06"
+    name: "Manifold Pressure (MAP) Sensor Bias Drift"
+    category: "Avionics / Sensor"
+    description: "MAP sensor reads +150 hPa higher than actual manifold pressure, causing FADEC over-fueling and twin residual."
+    severity: "WARNING"
+    symptoms:
+      map_sensor_residual_hpa: 150.0
+      correlated_temp_normal: true
+    prior_probability: 0.14
+    affected_components: ["sensor_map"]
+    alternative_explanation: "Manifold pressure pneumatic hose moisture condensation or CAN ADC reference voltage offset"
+    recommended_follow_up: "Recalibrate or replace primary MAP transducer; verify reference pneumatic hose for pinching or condensation."
+    model_basis: "Mean-Value Engine Model (MVEM) air intake manifold mass conservation residual"
+    system_limitation: "Sensor calibration warning; not a mechanical propulsion failure."
+
+  # Purple Data Quality Faults (Distinguished from Mechanical Engine Failures)
+  data_quality_packet_loss:
+    id: "DQ-01"
+    name: "Datalink Packet Loss Burst (Purple)"
+    category: "Data Quality / Telemetry"
+    description: "Synthetic telemetry frame drop rate exceeded 20%; datalink continuity degraded."
+    severity: "WARNING"
+    color: "#7c3aed"
+    prior_probability: 0.05
+    affected_components: ["telemetry_mirror_buffer", "gcs_decoder"]
+    alternative_explanation: "RF interference on ground antenna or local buffer overrun"
+    recommended_follow_up: "Maintain monitoring; confidence automatically downgraded; no engine maintenance required."
+    model_basis: "Telemetry sequence number continuity monitor"
+    system_limitation: "Telemetry transmission quality fault — does NOT indicate mechanical engine degradation."
+
+  data_quality_stale_telemetry:
+    id: "DQ-02"
+    name: "Stale / Frozen Telemetry Frame (Purple)"
+    category: "Data Quality / Telemetry"
+    description: "Sensor readings flatlined for >2.5s; telemetry timestamp not monotonically increasing."
+    severity: "WARNING"
+    color: "#7c3aed"
+    prior_probability: 0.04
+    affected_components: ["telemetry_stream", "sensor_bus"]
+    alternative_explanation: "SocketCAN bus lockup, buffer stall, or network packet freeze"
+    recommended_follow_up: "Check telemetry gateway connection; system automatically displays Last Known Valid State."
+    model_basis: "Timestamp monotonicity and variance threshold analysis"
+    system_limitation: "Data freshness fault — does NOT indicate mechanical engine failure."
